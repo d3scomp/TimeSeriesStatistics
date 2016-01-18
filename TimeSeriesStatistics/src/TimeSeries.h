@@ -11,40 +11,45 @@
 #include <cstdlib>
 #include <iostream>
 #include "StudentsDistribution.h"
-#include "TimedValueAccumulation.h"
 
-template <typename SeriesType, size_t WindowSize>
+template <size_t WindowSize>
 class TimeSeries {
 public:
 	TimeSeries() {
-		timeWindow = 0;
+		time = 0;
 		index = 0;
-	}
-
-	void addSample(SeriesType sample, size_t time){ // time in ms
-		if(this->timeWindow < (time/1000)){
-			// If the timeWindow belongs to the next timeWindow window
-			this->timeWindow = time/1000;
-			index = nextIndex();
-			accumulation[index] = TimedValueAccumulation<SeriesType>(this->timeWindow);
-			squares[index] = TimedValueAccumulation<SeriesType>(this->timeWindow);
+		for(size_t i = 0; i < WindowSize; ++i){
+			sampleCnt[i] = 0;
+			sampleSum[i] = 0;
+			sampleSquares[i] = 0;
 		}
-		accumulation[index].incrementValue(sample);
-		squares[index].incrementValue(sample*sample);
 	}
 
-	StudentsDistribution<SeriesType, WindowSize> getDistribution(){
-		size_t nIndex = nextIndex();
-		std::cout << nIndex << std::endl;
-		return StudentsDistribution<SeriesType, WindowSize>(nIndex, accumulation, squares);
+	void addSample(double sample, size_t time_ms){ // time in ms
+		if(time < (time_ms/1000)){
+			// If the timeWindow belongs to the next timeWindow window
+			time = time_ms/1000;
+			index = nextIndex();
+			sampleCnt[index] = 0;
+			sampleSum[index] = 0;
+			sampleSquares[index] = 0;
+		}
+		sampleCnt[index] += 1;
+		sampleSum[index] += sample;
+		sampleSquares[index] += sample * sample;
+	}
+
+	StudentsDistribution getMean(){
+		return StudentsDistribution(sampleCnt, sampleSum, sampleSquares, WindowSize);
 	}
 
 
 private:
-	size_t timeWindow; // in s
+	size_t time; // time in s
 	size_t index;
-	TimedValueAccumulation<SeriesType> accumulation[WindowSize];
-	TimedValueAccumulation<SeriesType> squares[WindowSize];
+	size_t sampleCnt[WindowSize];
+	double sampleSum[WindowSize];
+	double sampleSquares[WindowSize];
 
 	size_t nextIndex(){
 		return (index + 1) % WindowSize;
