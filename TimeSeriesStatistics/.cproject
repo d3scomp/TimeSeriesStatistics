@@ -18,7 +18,7 @@
 					<folderInfo id="cdt.managedbuild.config.gnu.cygwin.exe.debug.1694592161." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cygwin.exe.debug.1669032306" name="Cygwin GCC" superClass="cdt.managedbuild.toolchain.gnu.cygwin.exe.debug">
 							<targetPlatform id="cdt.managedbuild.target.gnu.platform.cygwin.exe.debug.745538525" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.cygwin.exe.debug"/>
-							<builder buildPath="${workspace_loc:/TimeSeriesStatisticsDemo}/Debug" id="cdt.managedbuild.target.gnu.builder.cygwin.exe.debug.1433140600" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.cygwin.exe.debug"/>
+							<builder buildPath="${workspace_loc:/TimeSeriesStatistics}/Debug" id="cdt.managedbuild.target.gnu.builder.cygwin.exe.debug.1433140600" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.cygwin.exe.debug"/>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.cygwin.exe.debug.741072204" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.cygwin.exe.debug">
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.659684864" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
@@ -66,7 +66,7 @@
 					<folderInfo id="cdt.managedbuild.config.gnu.cygwin.exe.release.1098824281." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cygwin.exe.release.1250373103" name="Cygwin GCC" superClass="cdt.managedbuild.toolchain.gnu.cygwin.exe.release">
 							<targetPlatform id="cdt.managedbuild.target.gnu.platform.cygwin.exe.release.1417745773" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.cygwin.exe.release"/>
-							<builder buildPath="${workspace_loc:/TimeSeriesStatisticsDemo}/Release" id="cdt.managedbuild.target.gnu.builder.cygwin.exe.release.1823131748" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.cygwin.exe.release"/>
+							<builder buildPath="${workspace_loc:/TimeSeriesStatistics}/Release" id="cdt.managedbuild.target.gnu.builder.cygwin.exe.release.1823131748" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.cygwin.exe.release"/>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.cygwin.exe.release.290339636" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.cygwin.exe.release">
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1217613108" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
@@ -99,7 +99,7 @@
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-		<project id="TimeSeriesStatisticsDemo.cdt.managedbuild.target.gnu.cygwin.exe.1075377199" name="Executable" projectType="cdt.managedbuild.target.gnu.cygwin.exe"/>
+		<project id="TimeSeriesStatistics.cdt.managedbuild.target.gnu.cygwin.exe.1075377199" name="Executable" projectType="cdt.managedbuild.target.gnu.cygwin.exe"/>
 	</storageModule>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
