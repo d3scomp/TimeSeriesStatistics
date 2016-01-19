@@ -18,54 +18,11 @@
 
 class StudentsDistribution {
 public:
-	StudentsDistribution(size_t sampleCnt, double mean, double variance)
-		: sampleCnt(sampleCnt), mean(mean), variance(variance) {
-
-	}
-
-	bool isLessThan(double sample, double confidence){
-		TDistribution td;
-		int err;
-		double confidenceInterval = td.tnc(confidence, sampleCnt-1, 0, &err);
-		if(err){
-			std::cerr << "tnc exited with error " << err << std::endl;
- 		}
-
-		return sample < mean + confidenceInterval;
-	}
-
-	bool isLessThanOrEqual(double sample, double confidence){
-		TDistribution td;
-		int err;
-		double confidenceInterval = td.tnc(confidence, sampleCnt-1, 0, &err);
-		if(err){
-			std::cerr << "tnc exited with error " << err << std::endl;
- 		}
-
-		return sample <= mean + confidenceInterval;
-	}
-
-	bool isGreaterThan(double sample, double confidence){
-		TDistribution td;
-		int err;
-		double confidenceInterval = td.tnc(confidence, sampleCnt-1, 0, &err);
-		if(err){
-			std::cerr << "tnc exited with error " << err << std::endl;
- 		}
-
-		return sample > mean - confidenceInterval;
-	}
-
-	bool isGreaterThanOrEqual(double sample, double confidence){
-		TDistribution td;
-		int err;
-		double confidenceInterval = td.tnc(confidence, sampleCnt-1, 0, &err);
-		if(err){
-			std::cerr << "tnc exited with error " << err << std::endl;
- 		}
-
-		return sample >= mean - confidenceInterval;
-	}
+	StudentsDistribution(size_t sampleCnt, double mean, double variance);
+	bool isLessThan(double sample, double confidence);
+	bool isLessThanOrEqual(double sample, double confidence);
+	bool isGreaterThan(double sample, double confidence);
+	bool isGreaterThanOrEqual(double sample, double confidence);
 
 private:
 	size_t sampleCnt;

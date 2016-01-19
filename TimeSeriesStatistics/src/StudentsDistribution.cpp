@@ -7,6 +7,56 @@
 
 #include "StudentsDistribution.h"
 
+StudentsDistribution::StudentsDistribution(size_t sampleCnt, double mean, double variance)
+		: sampleCnt(sampleCnt), mean(mean), variance(variance) {
+
+	}
+
+	bool StudentsDistribution::isLessThan(double sample, double confidence){
+		TDistribution td;
+		int err;
+		double confidenceInterval = td.tnc(confidence, sampleCnt-1, 0, &err);
+		if(err){
+			std::cerr << "tnc exited with error " << err << std::endl;
+ 		}
+
+		return sample < mean + confidenceInterval;
+	}
+
+	bool StudentsDistribution::isLessThanOrEqual(double sample, double confidence){
+		TDistribution td;
+		int err;
+		double confidenceInterval = td.tnc(confidence, sampleCnt-1, 0, &err);
+		if(err){
+			std::cerr << "tnc exited with error " << err << std::endl;
+ 		}
+
+		return sample <= mean + confidenceInterval;
+	}
+
+	bool StudentsDistribution::isGreaterThan(double sample, double confidence){
+		TDistribution td;
+		int err;
+		double confidenceInterval = td.tnc(confidence, sampleCnt-1, 0, &err);
+		if(err){
+			std::cerr << "tnc exited with error " << err << std::endl;
+ 		}
+
+		return sample > mean - confidenceInterval;
+	}
+
+	bool StudentsDistribution::isGreaterThanOrEqual(double sample, double confidence){
+		TDistribution td;
+		int err;
+		double confidenceInterval = td.tnc(confidence, sampleCnt-1, 0, &err);
+		if(err){
+			std::cerr << "tnc exited with error " << err << std::endl;
+ 		}
+
+		return sample >= mean - confidenceInterval;
+	}
+
+
 /*static const double tTable_data[] = // For 0.95 level significance
 {0.0, 12.70615030, 4.30265572, 3.18244929, 2.77645085, 2.57057763,
        2.44691364, 2.36462256, 2.30600562, 2.26215888, 2.22813923,
