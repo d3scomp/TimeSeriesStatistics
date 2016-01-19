@@ -16,7 +16,7 @@ using namespace std;
 int main() {
 	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
 
-	TimeSeries<10> s;
+	TimeSeries<10000,1000> s;
 	for(size_t i = 0; i < 20; ++i){
 		s.addSample(i%5, i*300);
 	}

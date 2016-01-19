@@ -12,7 +12,11 @@
 #include <iostream>
 #include "StudentsDistribution.h"
 
-template <size_t WindowSize>
+/*
+ * WindowSize - The time period to keep the history of. (in milliseconds)
+ * SubWindowSize - The time period to accumulate the samples within together. (in milliseconds)
+ */
+template <size_t WindowSize, size_t SubWindowSize>
 class TimeSeries {
 public:
 	TimeSeries() {
@@ -25,10 +29,10 @@ public:
 		}
 	}
 
-	void addSample(double sample, size_t time_ms){ // time in ms
-		if(time < (time_ms/1000)){
-			// If the timeWindow belongs to the next timeWindow window
-			time = time_ms/1000;
+	void addSample(double sample, size_t sample_time){ // time in ms
+		while((time + SubWindowSize) < sample_time){ // While here to skip potential unfilled subWindows
+			// If the sample_time belongs to the next time SubWindow
+			time += SubWindowSize; // Move to next time window and initialize it
 			index = nextIndex();
 			sampleCnt[index] = 0;
 			sampleSum[index] = 0;
@@ -40,6 +44,7 @@ public:
 	}
 
 	StudentsDistribution getMean(){
+		// TODO: compute the values here
 		return StudentsDistribution(sampleCnt, sampleSum, sampleSquares, WindowSize);
 	}
 
