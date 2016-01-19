@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include "TimeSeries.h"
 #include "StudentsDistribution.h"
+#include "TDistribution.h"
 
 using namespace std;
 
@@ -23,6 +24,16 @@ int main() {
 	StudentsDistribution d = s.getMean();
 
 	cout << d.isLessThan(2, 0.95) << endl;
+
+	TDistribution td;
+	int err;
+	for(size_t i = 0; i < 100; ++i){
+		double t = td.tnc(0.975, i, 0, &err);
+		if(err){
+			cout << "err " << err << endl;
+		}
+		cout << t << endl;
+	}
 
 	return 0;
 }
