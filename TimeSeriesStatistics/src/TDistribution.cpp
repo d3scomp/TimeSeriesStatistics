@@ -2,7 +2,7 @@
  * TDistribution.cpp
  *
  *  Created on: 19. 1. 2016
- *      Author: iridi
+ *      Author: Dominik Skoda <skoda@d3s.mff.cuni.cz>
  */
 
 #include "TDistribution.h"

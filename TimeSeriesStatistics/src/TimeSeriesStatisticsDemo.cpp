@@ -1,6 +1,6 @@
 //============================================================================
 // Name        : TimeSeriesStatisticsDemo.cpp
-// Author      : 
+// Author      : Dominik Skoda <skoda@d3s.mff.cuni.cz>
 // Version     :
 // Copyright   : Your copyright notice
 // Description : Hello World in C++, Ansi-style
