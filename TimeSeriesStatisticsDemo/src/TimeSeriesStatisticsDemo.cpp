@@ -8,8 +8,8 @@
 
 #include <iostream>
 #include <cstdlib>
-#include "../../TimeSeriesStatistics/src/TimeSeries.h"
-#include "../../TimeSeriesStatistics/src/StudentsDistribution.h"
+#include "TimeSeries.h"
+#include "StudentsDistribution.h"
 
 using namespace std;
 
@@ -22,7 +22,7 @@ int main() {
 	}
 	StudentsDistribution d = s.getMean();
 
-	cout << d.isEqual(2) << endl;
+	cout << d.isLessThan(2, 0.95) << endl;
 
 	return 0;
 }
