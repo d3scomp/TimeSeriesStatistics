@@ -28,12 +28,6 @@ public:
 	}
 
 	bool isLessThan(double sample, double confidence){
-		/*double combinedVariance = (variance/sampleCnt); // given sample variance is 0
-			double combinedVRoot = sqrt(combinedVariance);
-			double t = abs(mean - sample)/combinedVRoot;
-			double tabulatedT = tTable[sampleCnt-1];
-			return t <= tabulatedT;*/
-
 		TDistribution td;
 		int err;
 		double confidenceInterval = td.tnc(confidence, sampleCnt-1, 0, &err);
@@ -42,6 +36,39 @@ public:
  		}
 
 		return sample < mean + confidenceInterval;
+	}
+
+	bool isLessThanOrEqual(double sample, double confidence){
+		TDistribution td;
+		int err;
+		double confidenceInterval = td.tnc(confidence, sampleCnt-1, 0, &err);
+		if(err){
+			std::cerr << "tnc exited with error " << err << std::endl;
+ 		}
+
+		return sample <= mean + confidenceInterval;
+	}
+
+	bool isGreaterThan(double sample, double confidence){
+		TDistribution td;
+		int err;
+		double confidenceInterval = td.tnc(confidence, sampleCnt-1, 0, &err);
+		if(err){
+			std::cerr << "tnc exited with error " << err << std::endl;
+ 		}
+
+		return sample > mean - confidenceInterval;
+	}
+
+	bool isGreaterThanOrEqual(double sample, double confidence){
+		TDistribution td;
+		int err;
+		double confidenceInterval = td.tnc(confidence, sampleCnt-1, 0, &err);
+		if(err){
+			std::cerr << "tnc exited with error " << err << std::endl;
+ 		}
+
+		return sample >= mean - confidenceInterval;
 	}
 
 private:
