@@ -31,8 +31,8 @@ entries in the table are approximated.
 
 After the TTable.h and TTable.cpp files are generated the classes can be used in an application.
 The TimeSeries class serves for storing the time series with defined history length. The history
-length is specified as template parameters: WindowCnt is the count of history windows; SubWindowSize
-is the time length of a window (in milliseconds). The WindowsCnt * SubWindowSize = time length of
+length is specified as template parameters: WindowCnt is the count of history windows; WindowSize
+is the time length of a window (in milliseconds). The WindowsCnt * WindowSize = time length of
 the time series history.
 
 Using the TimeSeries.addSample method the time series history can be populated. And subsequential
@@ -44,3 +44,23 @@ and it's inequality with the queried quantity on some confidence level.
 
 The project contains a demo application that shows how this project can be used.
 
+## Tutorial
+
+In this section where is step by step tutorial on how to use this project.
+The easies wat to use this project is through Eclipse ID with installed CDT and PyDev.
+
+1. Generate TTable.h and TTable.cpp
+  * invoke gen_ttable.py
+2. Include the following files into your project
+  * TimeSeries.h
+  * StudentsDistribution.h
+  * TTable.h
+3. Declare an instance of TimeSeries for each time-series window you want to test
+  * TimeSeries<10, 1000> ts;
+    * Where the first parameter if number of time windows and the second parameter is a window duration
+    * The instance above keeps time series with a history of 10 seconds (10 * 1000 ms)
+4. Whenever you get a value from sensor, add it to the respective timeseries along with a timestamp (in ms)
+  * ts.addSample(samlpe, time);
+5. Test the predicted real value of the timeseries assuming a linear trend
+  * StudentsDistribution lra = ts.getLra();
+  * bool answer = lra.isLessThan(tresholdToTest, ALPHA_0_05); // Second parameter is confidence level from TTable.h
