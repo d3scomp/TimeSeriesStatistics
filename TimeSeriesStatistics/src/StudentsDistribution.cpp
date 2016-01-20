@@ -44,7 +44,7 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 		double dist = (mean - sample) / sqrt(variance);
 		double icdfValue = getICDF(a);
 
-		return -icdfValue >= dist;
+		return -icdfValue > dist;
 	}
 
 	bool StudentsDistribution::isLessThanOrEqual(double sample, ALPHAS a){
@@ -56,7 +56,7 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 		double dist = (mean - sample) / sqrt(variance);
 		double icdfValue = getICDF(a);
 
-		return -icdfValue > dist;
+		return -icdfValue >= dist;
 	}
 
 	bool StudentsDistribution::isGreaterThan(double sample, ALPHAS a){
@@ -68,7 +68,7 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 		double dist = (mean - sample) / sqrt(variance);
 		double icdfValue = getICDF(a);
 
-		return -icdfValue <= dist;
+		return -icdfValue < dist;
 	}
 
 	bool StudentsDistribution::isGreaterThanOrEqual(double sample, ALPHAS a){
@@ -80,7 +80,7 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 		double dist = (mean - sample) / sqrt(variance);
 		double icdfValue = getICDF(a);
 
-		return -icdfValue < dist;
+		return -icdfValue <= dist;
 	}
 
 	double StudentsDistribution::getICDF(ALPHAS a){
