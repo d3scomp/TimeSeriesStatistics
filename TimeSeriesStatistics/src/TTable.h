@@ -1,14 +1,13 @@
 /*
  * TTable.h
  *
- *  Created on: 20. 1. 2016
- *      Author: iridi
+ * Header file for quantiles of the Student's t-distribution
  */
 
 #ifndef TTABLE_H_
 #define TTABLE_H_
 
-enum ALPHAS {ALPHA_0_05, ALPHA_0_025};
+enum ALPHAS {ALPHA_0_025, ALPHA_0_05};
 
 extern const int minor_count;
 extern const int boost;
