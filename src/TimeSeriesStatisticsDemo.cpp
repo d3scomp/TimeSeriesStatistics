@@ -31,10 +31,10 @@
 using namespace std;
 
 int main() {
-	size_t sampleCnt = 20;
+	int sampleCnt = 20;
 
 	TimeSeries<10, 1000> s;
-	for (size_t i = 0; i < sampleCnt; ++i) {
+	for (int i = 0; i < sampleCnt; ++i) {
 		s.addSample(i % 5, i * 300);
 	}
 	StudentsDistribution m = s.getMean();
@@ -82,7 +82,7 @@ int main() {
 			<< lr.isGreaterThanOrEqual(2, ALPHA_0_05) << endl;
 
 	TimeSeries<3, 2000> sj;
-	for (size_t j = 1; j <= 5; ++j) {
+	for (int j = 1; j <= 5; ++j) {
 		sj.addSample(j, j * 300);
 		StudentsDistribution m = sj.getMean();
 

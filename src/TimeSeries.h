@@ -35,20 +35,20 @@
  * WindowSize - The number of subWindows keep the history of
  * SubWindowSize - The time period to accumulate the samples within together. (in milliseconds)
  */
-template<size_t WindowCnt, size_t SubWindowSize>
+template<int WindowCnt, int SubWindowSize>
 class TimeSeries {
 public:
 	TimeSeries() {
 		time = 0;
 		index = 0;
-		for (size_t i = 0; i < WindowCnt; ++i) {
+		for (int i = 0; i < WindowCnt; ++i) {
 			sampleCounts[i] = 0;
 			sampleSum[i] = 0;
 			sampleSquaresSum[i] = 0;
 		}
 	}
 
-	void addSample(double sample, size_t sampleTime) { // time in ms
+	void addSample(double sample, int sampleTime) { // time in ms
 		while ((time + SubWindowSize) < sampleTime) { // While here to skip potential unfilled subWindows
 			// If the sample_time belongs to the next time SubWindow
 			time += SubWindowSize; // Move to next time window and initialize it
@@ -64,12 +64,12 @@ public:
 		sampleSum[index] += sample;
 		sampleSquaresSum[index] += sample * sample;
 		timeSum[index] += sampleTime;
-		timeSquaresSum[index] = sampleTime * sampleTime;
+		timeSquaresSum[index] += sampleTime * sampleTime;
 		sampleTimeSum[index] += sample * sampleTime;
 	}
 
 	StudentsDistribution getMean() {
-		size_t sampleCnt = computeSampleCnt();
+		int sampleCnt = computeSampleCnt();
 		double mean = computeMean(sampleCnt);
 		double variance = computeMeanVariance(sampleCnt);
 
@@ -77,7 +77,7 @@ public:
 	}
 
 	StudentsDistribution getLra() {
-		size_t sampleCnt = computeSampleCnt();
+		int sampleCnt = computeSampleCnt();
 		double a = computeLraMean(sampleCnt);
 		double b = computeLrbMean(sampleCnt);
 		double e2 = computeEpsilonSquaredSum(a, b, sampleCnt);
@@ -88,7 +88,7 @@ public:
 	}
 
 	StudentsDistribution getLrb() {
-		size_t sampleCnt = computeSampleCnt();
+		int sampleCnt = computeSampleCnt();
 		double a = computeLraMean(sampleCnt);
 		double b = computeLrbMean(sampleCnt);
 		double e2 = computeEpsilonSquaredSum(a, b, sampleCnt);
@@ -98,7 +98,7 @@ public:
 	}
 
 	StudentsDistribution getLr(double x) {
-		size_t sampleCnt = computeSampleCnt();
+		int sampleCnt = computeSampleCnt();
 		double a = computeLraMean(sampleCnt);
 		double b = computeLrbMean(sampleCnt);
 		double mean = computeLrMean(a, b, x);
@@ -109,24 +109,24 @@ public:
 	}
 
 private:
-	size_t time; // time in s
-	size_t index;
-	size_t sampleCounts[WindowCnt];
+	int time; // time in ms
+	int index;
+	int sampleCounts[WindowCnt];
 	double sampleSum[WindowCnt]; // sum(x_i)
 	double sampleSquaresSum[WindowCnt]; // sum(x_i^2)
 	double timeSum[WindowCnt]; // sum(t_i)
 	double timeSquaresSum[WindowCnt]; // sum(t_i^2)
 	double sampleTimeSum[WindowCnt]; // sum(x_i*t_i)
 
-	size_t nextIndex() {
+	int nextIndex() {
 		return (index + 1) % WindowCnt;
 	}
 
-	size_t computeSampleCnt() {
+	int computeSampleCnt() {
 		return sum(sampleCounts);
 	}
 
-	double computeMean(size_t n) {
+	double computeMean(int n) {
 		if (n <= 0) {
 			return NAN;
 		}
@@ -135,7 +135,7 @@ private:
 		return m / n;
 	}
 
-	double computeMeanVariance(size_t n) {
+	double computeMeanVariance(int n) {
 		if (n <= 1) {
 			return NAN;
 		}
@@ -146,7 +146,7 @@ private:
 		return (x2 - x*x/n) / (n - 1);
 	}
 
-	double computeLraMean(size_t n) {
+	double computeLraMean(int n) {
 		if (n <= 0) {
 			return NAN;
 		}
@@ -158,7 +158,7 @@ private:
 		return (y - b * x) / n;
 	}
 
-	double computeLraVariance(size_t n, double varianceB) {
+	double computeLraVariance(int n, double varianceB) {
 		if (n <= 0) {
 			return NAN;
 		}
@@ -168,7 +168,7 @@ private:
 		return varianceB * x2 / n;
 	}
 
-	double computeLrbMean(size_t n) {
+	double computeLrbMean(int n) {
 		if (n <= 0) {
 			return NAN;
 		}
@@ -186,7 +186,7 @@ private:
 	/*
 	 * e2 = computeEpsilonSquaredSum(...)
 	 */
-	double computeLrbVariance(size_t n, double e2) {
+	double computeLrbVariance(int n, double e2) {
 		if (n <= 0) {
 			return NAN;
 		}
@@ -194,7 +194,7 @@ private:
 		double x = sum(timeSum);
 		double x2 = sum(timeSquaresSum);
 
-		double num = e2 / (n - 2);
+		double nom = e2 / (n - 2);
 		double denom = x2 - x*x/n;
 		return denom != 0 ? nom / denom : NAN;
 	}
@@ -206,7 +206,7 @@ private:
 	/*
 	 * point is the point of interest
 	 */
-	double computeLrVariance(size_t n, double e2, double point) {
+	double computeLrVariance(int n, double e2, double point) {
 		// Check that division by zero won't occur
 		if (n <= 2) {
 			return NAN;
@@ -222,21 +222,21 @@ private:
 
 	double sum(double *samples) {
 		double s = 0;
-		for (size_t i = 0; i < WindowCnt; ++i) {
+		for (int i = 0; i < WindowCnt; ++i) {
 			s += samples[i];
 		}
 		return s;
 	}
 
-	size_t sum(size_t *samples) {
-		size_t s = 0;
-		for (size_t i = 0; i < WindowCnt; ++i) {
+	int sum(int *samples) {
+		int s = 0;
+		for (int i = 0; i < WindowCnt; ++i) {
 			s += samples[i];
 		}
 		return s;
 	}
 
-	double computeEpsilonSquaredSum(double a, double b, size_t n) {
+	double computeEpsilonSquaredSum(double a, double b, int n) {
 		if (n <= 2) {
 			return NAN;
 		}
@@ -247,7 +247,7 @@ private:
 		double y2 = sum(sampleSquaresSum);
 		double xy = sum(sampleTimeSum);
 
-		return y2 + n*a*a + b*b*x2 - 2*a*y - 2*b*xy + 2*a*b*x
+		return y2 + n*a*a + b*b*x2 - 2*a*y - 2*b*xy + 2*a*b*x;
 	}
 
 };

@@ -35,7 +35,7 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 
 	}
 
-	bool StudentsDistribution::isLessThan(double threshold, ALPHAS a){
+	bool StudentsDistribution::isLessThan(double threshold, ALPHAS a) {
 		if (df < 1) {
 			// reject hypothesis if there is not enough samples
 			return false;
@@ -47,31 +47,31 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 		return icdfValue > dist;
 	}
 
-	bool StudentsDistribution::isLessThanOrEqual(double threshold, ALPHAS a){
+	bool StudentsDistribution::isLessThanOrEqual(double threshold, ALPHAS a) {
 		if (df < 1) {
 			// accept hypothesis if there is not enough samples
 			return true;
 		}
 
 		double dist = (mean - threshold) / sqrt(variance);
-		double icdfValue = getICDF(a);
+		double icdfValue = -getICDF(a);
 
-		return -icdfValue >= dist;
+		return icdfValue >= dist;
 	}
 
-	bool StudentsDistribution::isGreaterThan(double threshold, ALPHAS a){
+	bool StudentsDistribution::isGreaterThan(double threshold, ALPHAS a) {
 		if (df < 1) {
 			// reject hypothesis if there is not enough samples
 			return false;
 		}
 
 		double dist = (mean - threshold) / sqrt(variance);
-		double icdfValue = getICDF(a);
+		double icdfValue = -getICDF(a);
 
-		return -icdfValue < dist;
+		return icdfValue < dist;
 	}
 
-	bool StudentsDistribution::isGreaterThanOrEqual(double threshold, ALPHAS a){
+	bool StudentsDistribution::isGreaterThanOrEqual(double threshold, ALPHAS a) {
 		if (df < 1) {
 			// accept hypothesis if there is not enough samples
 			return true;
@@ -79,11 +79,11 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 
 		double dist = (mean - threshold) / sqrt(variance);
 		double icdfValue = getICDF(a);
-
+	
 		return icdfValue <= dist;
 	}
 
-	double StudentsDistribution::getICDF(ALPHAS a){
+	double StudentsDistribution::getICDF(ALPHAS a) {
 		const double *icdfA = icdf[a];
 		int base = 0;
 		int major_idx = -1;
@@ -101,7 +101,7 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 			int idx = major_idx * minor_count + minor_idx;
 			return icdfA[idx];
 		} else {
-			size_t minor_idx = df / minor_step;
+			int minor_idx = df / minor_step;
 			int df_high = base + (minor_idx + 1) * minor_step;
 			int df_low = df_high - minor_step;
 			int idx_high = major_idx * minor_count + minor_idx;
