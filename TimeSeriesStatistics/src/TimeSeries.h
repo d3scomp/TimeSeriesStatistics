@@ -13,16 +13,16 @@
 #include "StudentsDistribution.h"
 
 /*
- * WindowSize - The time period to keep the history of. (in milliseconds)
+ * WindowSize - The number of subWindows keep the history of
  * SubWindowSize - The time period to accumulate the samples within together. (in milliseconds)
  */
-template<size_t WindowSize, size_t SubWindowSize>
+template<size_t WindowCnt, size_t SubWindowSize>
 class TimeSeries { // TODO: check division by zero
 public:
 	TimeSeries() {
 		time = 0;
 		index = 0;
-		for (size_t i = 0; i < WindowSize; ++i) {
+		for (size_t i = 0; i < WindowCnt; ++i) {
 			sampleCounts[i] = 0;
 			sampleSum[i] = 0;
 			sampleSquaresSum[i] = 0;
@@ -92,15 +92,15 @@ public:
 private:
 	size_t time; // time in s
 	size_t index;
-	size_t sampleCounts[WindowSize];
-	double sampleSum[WindowSize]; // sum(x_i)
-	double sampleSquaresSum[WindowSize]; // sum(x_i^2)
-	double timeSum[WindowSize]; // sum(t_i)
-	double timeSquaresSum[WindowSize]; // sum(t_i^2)
-	double sampleTimeSum[WindowSize]; // sum(x_i*t_i)
+	size_t sampleCounts[WindowCnt];
+	double sampleSum[WindowCnt]; // sum(x_i)
+	double sampleSquaresSum[WindowCnt]; // sum(x_i^2)
+	double timeSum[WindowCnt]; // sum(t_i)
+	double timeSquaresSum[WindowCnt]; // sum(t_i^2)
+	double sampleTimeSum[WindowCnt]; // sum(x_i*t_i)
 
 	size_t nextIndex() {
-		return (index + 1) % WindowSize;
+		return (index + 1) % WindowCnt;
 	}
 
 	size_t computeSampleCnt() {
@@ -195,7 +195,7 @@ private:
 
 	double sum(double *samples) {
 		double s = 0;
-		for (size_t i = 0; i < WindowSize; ++i) {
+		for (size_t i = 0; i < WindowCnt; ++i) {
 			s += samples[i];
 		}
 		return s;
@@ -203,7 +203,7 @@ private:
 
 	size_t sum(size_t *samples) {
 		size_t s = 0;
-		for (size_t i = 0; i < WindowSize; ++i) {
+		for (size_t i = 0; i < WindowCnt; ++i) {
 			s += samples[i];
 		}
 		return s;

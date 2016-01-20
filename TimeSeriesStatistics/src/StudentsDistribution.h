@@ -21,14 +21,14 @@ public:
 	/*
 	 * df - degrees of freedom
 	 */
-	StudentsDistribution(size_t df, double mean, double variance);
+	StudentsDistribution(int df, double mean, double variance);
 	bool isLessThan(double sample, ALPHAS a);
 	bool isLessThanOrEqual(double sample, ALPHAS a);
 	bool isGreaterThan(double sample, ALPHAS a);
 	bool isGreaterThanOrEqual(double sample, ALPHAS a);
 
 private:
-	size_t df; // degrees of freedom
+	int df; // degrees of freedom
 	double mean;
 	double variance;
 	double getICDF(ALPHAS a);

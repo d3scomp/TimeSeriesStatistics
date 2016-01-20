@@ -11,12 +11,17 @@
 /*
  * df - degrees of freedom
  */
-StudentsDistribution::StudentsDistribution(size_t df, double mean, double variance)
+StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 		: df(df), mean(mean), variance(variance) {
 
 	}
 
 	bool StudentsDistribution::isLessThan(double sample, ALPHAS a){
+		if(df < 1){
+			// reject hypothesis if there is not enough samples
+			return false;
+		}
+
 		double dist = (mean - sample) / sqrt(variance);
 		double icdfValue = getICDF(a);
 
@@ -24,6 +29,11 @@ StudentsDistribution::StudentsDistribution(size_t df, double mean, double varian
 	}
 
 	bool StudentsDistribution::isLessThanOrEqual(double sample, ALPHAS a){
+		if(df < 1){
+			// accept hypothesis if there is not enough samples
+			return true;
+		}
+
 		double dist = (mean - sample) / sqrt(variance);
 		double icdfValue = getICDF(a);
 
@@ -31,6 +41,11 @@ StudentsDistribution::StudentsDistribution(size_t df, double mean, double varian
 	}
 
 	bool StudentsDistribution::isGreaterThan(double sample, ALPHAS a){
+		if(df < 1){
+			// reject hypothesis if there is not enough samples
+			return false;
+		}
+
 		double dist = (mean - sample) / sqrt(variance);
 		double icdfValue = getICDF(a);
 
@@ -38,6 +53,11 @@ StudentsDistribution::StudentsDistribution(size_t df, double mean, double varian
 	}
 
 	bool StudentsDistribution::isGreaterThanOrEqual(double sample, ALPHAS a){
+		if(df < 1){
+			// accept hypothesis if there is not enough samples
+			return true;
+		}
+
 		double dist = (mean - sample) / sqrt(variance);
 		double icdfValue = getICDF(a);
 
