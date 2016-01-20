@@ -41,10 +41,10 @@ public:
 	 * df - degrees of freedom
 	 */
 	StudentsDistribution(int df, double mean, double variance);
-	bool isLessThan(double sample, ALPHAS a);
-	bool isLessThanOrEqual(double sample, ALPHAS a);
-	bool isGreaterThan(double sample, ALPHAS a);
-	bool isGreaterThanOrEqual(double sample, ALPHAS a);
+	bool isLessThan(double threshold, ALPHAS a);
+	bool isLessThanOrEqual(double threshold, ALPHAS a);
+	bool isGreaterThan(double threshold, ALPHAS a);
+	bool isGreaterThanOrEqual(double threshold, ALPHAS a);
 
 private:
 	int df; // degrees of freedom

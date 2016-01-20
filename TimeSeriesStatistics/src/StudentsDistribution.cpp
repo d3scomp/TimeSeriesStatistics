@@ -35,49 +35,49 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 
 	}
 
-	bool StudentsDistribution::isLessThan(double sample, ALPHAS a){
+	bool StudentsDistribution::isLessThan(double threshold, ALPHAS a){
 		if(df < 1){
 			// reject hypothesis if there is not enough samples
 			return false;
 		}
 
-		double dist = (mean - sample) / sqrt(variance);
+		double dist = (mean - threshold) / sqrt(variance);
 		double icdfValue = getICDF(a);
 
 		return -icdfValue > dist;
 	}
 
-	bool StudentsDistribution::isLessThanOrEqual(double sample, ALPHAS a){
+	bool StudentsDistribution::isLessThanOrEqual(double threshold, ALPHAS a){
 		if(df < 1){
 			// accept hypothesis if there is not enough samples
 			return true;
 		}
 
-		double dist = (mean - sample) / sqrt(variance);
+		double dist = (mean - threshold) / sqrt(variance);
 		double icdfValue = getICDF(a);
 
 		return -icdfValue >= dist;
 	}
 
-	bool StudentsDistribution::isGreaterThan(double sample, ALPHAS a){
+	bool StudentsDistribution::isGreaterThan(double threshold, ALPHAS a){
 		if(df < 1){
 			// reject hypothesis if there is not enough samples
 			return false;
 		}
 
-		double dist = (mean - sample) / sqrt(variance);
+		double dist = (mean - threshold) / sqrt(variance);
 		double icdfValue = getICDF(a);
 
 		return -icdfValue < dist;
 	}
 
-	bool StudentsDistribution::isGreaterThanOrEqual(double sample, ALPHAS a){
+	bool StudentsDistribution::isGreaterThanOrEqual(double threshold, ALPHAS a){
 		if(df < 1){
 			// accept hypothesis if there is not enough samples
 			return true;
 		}
 
-		double dist = (mean - sample) / sqrt(variance);
+		double dist = (mean - threshold) / sqrt(variance);
 		double icdfValue = getICDF(a);
 
 		return -icdfValue <= dist;
