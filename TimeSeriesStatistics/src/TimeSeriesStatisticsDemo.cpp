@@ -10,7 +10,6 @@
 #include <cstdlib>
 #include "TimeSeries.h"
 #include "StudentsDistribution.h"
-#include "TDistribution.h"
 #include "TTable.h"
 
 using namespace std;

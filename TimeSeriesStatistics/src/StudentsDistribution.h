@@ -14,7 +14,6 @@
 #include <cstdlib>
 #include <iostream>
 #include <math.h>
-#include "TDistribution.h"
 #include "TTable.h"
 
 class StudentsDistribution {
