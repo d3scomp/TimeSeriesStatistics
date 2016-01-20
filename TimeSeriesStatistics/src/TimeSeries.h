@@ -35,7 +35,7 @@
  * SubWindowSize - The time period to accumulate the samples within together. (in milliseconds)
  */
 template<size_t WindowCnt, size_t SubWindowSize>
-class TimeSeries { // TODO: check division by zero
+class TimeSeries {
 public:
 	TimeSeries() {
 		time = 0;
@@ -128,23 +128,37 @@ private:
 	double computeMean(size_t n) {
 		// m = 1/N * sum(x_i)
 		double m = sum(sampleSum);
-		m /= n;
-		return m;
+		return n != 0
+				? m / n
+				: 0;
 	}
 
 	double computeMeanVariance(size_t n) {
 		// Corrected sample variance
 		// v^2 = ( 1/(N-1) * sum(x_i - avg(x))^2 ) / N
 		// v^2 = ( 1/(N-1) * (sum(x_i^2) - 2avg(x)*sum(x_i) + n*avg(x)^2) ) / N
+		// v^2 = ( 1/(N-1) * (sum(x_i^2) - 2avg(x)*sum(x_i) + x*avg(x)) ) / N
+
+		// Check that division by zero won't occur
+		if(n < 2){
+			return 0;
+		}
+
 		double x2 = sum(sampleSquaresSum);
 		double x = sum(sampleSum);
 		double avgX = x / n;
 
-		return ((x2 - 2*avgX*x + n*avgX*avgX) / (n - 1)) / n;
+		return ((x2 - 2*avgX*x + x*avgX) / (n - 1)) / n;
 	}
 
 	double computeLraMean(size_t n) {
 		// a = avg(t) - b*avg(x)
+
+		// Check that division by zero won't occur
+		if(n == 0){
+			return 0;
+		}
+
 		double avgT = sum(timeSum) / n;
 		double b = computeLrbMean(n);
 		double avgX = sum(sampleSum) / n;
@@ -159,18 +173,29 @@ private:
 		// v^2 = v_b^2 * 1/n * sum(x_i^2)
 		double x2 = sum(sampleSquaresSum);
 
-		return varianceB * x2 / n;
+		return n != 0
+				? varianceB * x2 / n
+				: 0;
 	}
 
 	double computeLrbMean(size_t n) {
 		// b = (avg(xt) - avg(x)avg(t)) / (avg(x^2) - avg(x)^2)
+
+		// Check that division by zero won't occur
+		if(n == 0){
+			return 0;
+		}
+
 		double avgXT = sum(sampleTimeSum) / n;
 		double avgXavgT = (sum(sampleSum) / n)
 				* (sum(timeSum) / n);
 		double avgX2 = sum(sampleSquaresSum) / n;
 		double avgX = sum(sampleSum) / n;
+		double div = avgX2 - avgX * avgX;
 
-		return (avgXT - avgXavgT) / (avgX2 - avgX * avgX);
+		return div != 0
+				? (avgXT - avgXavgT) / div
+				: 0;
 	}
 
 	/*
@@ -180,11 +205,20 @@ private:
 		// v^2 = (1/(n-2) * epsilon) / sum((x_i - avg(x))^2)
 		// v^2 = (1/(n-2) * epsilon) / (sum(x_i^2) - 2avg(x)*sum(x_i) + n*avg(x)^2)
 		// v^2 = (1/(n-2) * epsilon) / (sum(x_i^2) - avg(x)*sum(x_i))
+
+		// Check that division by zero won't occur
+		if(n == 0){
+			return 0;
+		}
+
 		double x = sum(sampleSum);
 		double x2 = sum(sampleSquaresSum);
 		double avgX = x / n;
+		double div = x2 - avgX * x;
 
-		return (epsilon / (n - 2)) / (x2 - avgX * x);
+		return div != 0 && n != 2
+				? (epsilon / (n - 2)) / div
+				: 0;
 	}
 
 	double computeLrMean(double a, double b, double x) {
@@ -198,16 +232,23 @@ private:
 	double computeLrVariance(size_t n, double epsilon, double point) {
 		// v^2 = 1/(n-2) * epsilon * (1/n + (point - avg(x))^2 / sum(x_i - avg(x))^2)
 		// v^2 = 1/(n-2) * epsilon * (1/n + (point - avg(x))^2 / (sum(x_i^2) - 2*avg(x)*sum(x_i) + n*avg(x^2)))
+		// v^2 = 1/(n-2) * epsilon * (1/n + (point - avg(x))^2 / (sum(x_i^2) - 2*avg(x)*sum(x_i) + x^2))
+		// v^2 = 1/(n-2) * epsilon * (1/n + (point - avg(x))^2 / (2*sum(x_i^2) - 2*avg(x)*sum(x_i)))
+
+		// Check that division by zero won't occur
+		if(n == 0){
+			return 0;
+		}
+
 		double x = sum(sampleSum);
 		double x2 = sum(sampleSquaresSum);
 		double avgX = x / n;
-		double avgX2 = x2 / n;
 		double pAvgX = (point - avgX);
+		double div = 2*x2 - 2 * avgX * x;
 
-		return epsilon / (n - 2)
-				* (1 / (double) n
-						+ pAvgX * pAvgX
-								/ (x2 - 2 * avgX * x + n * avgX2));
+		return div != 0 && n != 2
+				? epsilon / (n - 2) * (1 / (double) n + pAvgX * pAvgX / div)
+				: 0;
 	}
 
 	double sum(double *samples) {
