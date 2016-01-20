@@ -127,29 +127,29 @@ private:
 		return sum(sampleCounts);
 	}
 
-	double computeMean(size_t sampleCnt) {
+	double computeMean(size_t n) {
 		// m = 1/N * sum(x_i)
 		double m = sum(sampleSum);
-		m /= sampleCnt;
+		m /= n;
 		return m;
 	}
 
-	double computeMeanVariance(size_t sampleCnt) {
+	double computeMeanVariance(size_t n) {
 		// Corrected sample variance
 		// v^2 = ( 1/(N-1) * sum(x_i - avg(x))^2 ) / N
 		// v^2 = ( 1/(N-1) * (sum(x_i^2) - 2avg(x)*sum(x_i) + n*avg(x)^2) ) / N
 		double x2 = sum(sampleSquaresSum);
 		double x = sum(sampleSum);
-		double avgX = x / sampleCnt;
+		double avgX = x / n;
 
-		return ((x2 - 2*avgX*x + sampleCnt*avgX*avgX) / (sampleCnt - 1)) / sampleCnt;
+		return ((x2 - 2*avgX*x + n*avgX*avgX) / (n - 1)) / n;
 	}
 
-	double computeLraMean(size_t sampleCnt) {
+	double computeLraMean(size_t n) {
 		// a = avg(t) - b*avg(x)
-		double avgT = sum(timeSum) / sampleCnt;
-		double b = computeLrbMean(sampleCnt);
-		double avgX = sum(sampleSum) / sampleCnt;
+		double avgT = sum(timeSum) / n;
+		double b = computeLrbMean(n);
+		double avgX = sum(sampleSum) / n;
 
 		return avgT - b * avgX;
 	}
@@ -157,20 +157,20 @@ private:
 	/*
 	 * varianceB = v_b^2
 	 */
-	double computeLraVariance(size_t sampleCnt, double varianceB) {
+	double computeLraVariance(size_t n, double varianceB) {
 		// v^2 = v_b^2 * 1/n * sum(x_i^2)
 		double x2 = sum(sampleSquaresSum);
 
-		return varianceB * x2 / sampleCnt;
+		return varianceB * x2 / n;
 	}
 
-	double computeLrbMean(size_t sampleCnt) {
+	double computeLrbMean(size_t n) {
 		// b = (avg(xt) - avg(x)avg(t)) / (avg(x^2) - avg(x)^2)
-		double avgXT = sum(sampleTimeSum) / sampleCnt;
-		double avgXavgT = (sum(sampleSum) / sampleCnt)
-				* (sum(timeSum) / sampleCnt);
-		double avgX2 = sum(sampleSquaresSum) / sampleCnt;
-		double avgX = sum(sampleSum) / sampleCnt;
+		double avgXT = sum(sampleTimeSum) / n;
+		double avgXavgT = (sum(sampleSum) / n)
+				* (sum(timeSum) / n);
+		double avgX2 = sum(sampleSquaresSum) / n;
+		double avgX = sum(sampleSum) / n;
 
 		return (avgXT - avgXavgT) / (avgX2 - avgX * avgX);
 	}
@@ -178,15 +178,15 @@ private:
 	/*
 	 * epsilon = sum(epsilon_i^2)
 	 */
-	double computeLrbVariance(size_t sampleCnt, double epsilon) {
+	double computeLrbVariance(size_t n, double epsilon) {
 		// v^2 = (1/(n-2) * epsilon) / sum((x_i - avg(x))^2)
 		// v^2 = (1/(n-2) * epsilon) / (sum(x_i^2) - 2avg(x)*sum(x_i) + n*avg(x)^2)
 		// v^2 = (1/(n-2) * epsilon) / (sum(x_i^2) - avg(x)*sum(x_i))
 		double x = sum(sampleSum);
 		double x2 = sum(sampleSquaresSum);
-		double avgX = x / sampleCnt;
+		double avgX = x / n;
 
-		return (epsilon / (sampleCnt - 2)) / (x2 - avgX * x);
+		return (epsilon / (n - 2)) / (x2 - avgX * x);
 	}
 
 	double computeLrMean(double a, double b, double x) {
@@ -197,19 +197,19 @@ private:
 	/*
 	 * point is the point of interest
 	 */
-	double computeLrVariance(size_t sampleCnt, double epsilon, double point) {
+	double computeLrVariance(size_t n, double epsilon, double point) {
 		// v^2 = 1/(n-2) * epsilon * (1/n + (point - avg(x))^2 / sum(x_i - avg(x))^2)
 		// v^2 = 1/(n-2) * epsilon * (1/n + (point - avg(x))^2 / (sum(x_i^2) - 2*avg(x)*sum(x_i) + n*avg(x^2)))
 		double x = sum(sampleSum);
 		double x2 = sum(sampleSquaresSum);
-		double avgX = x / sampleCnt;
-		double avgX2 = x2 / sampleCnt;
+		double avgX = x / n;
+		double avgX2 = x2 / n;
 		double pAvgX = (point - avgX);
 
-		return epsilon / (sampleCnt - 2)
-				* (1 / (double) sampleCnt
+		return epsilon / (n - 2)
+				* (1 / (double) n
 						+ pAvgX * pAvgX
-								/ (x2 - 2 * avgX * x + sampleCnt * avgX2));
+								/ (x2 - 2 * avgX * x + n * avgX2));
 	}
 
 	double sum(double *samples) {
@@ -228,7 +228,7 @@ private:
 		return s;
 	}
 
-	double computeEpsilonSquaredSum(double a, double b, size_t sampleCnt) {
+	double computeEpsilonSquaredSum(double a, double b, size_t n) {
 		// sum(epsilon_i^2) = sum((t_i - a - bx_i)^2)
 		// sum(epsilon_i^2) = sum(t_i^2) + n*a^2 + b^2*sum(x_i^2)
 		//						+ 2ab*sum(x_i) - 2a*sum(t_i) - 2b*sum(x_i*t_i)
@@ -239,7 +239,7 @@ private:
 		double t = sum(timeSum);
 		double xt = sum(sampleTimeSum);
 
-		return t2 + sampleCnt * a * a + b * b * x2 + 2 * a * b * x - 2 * a * t
+		return t2 + n * a * a + b * b * x2 + 2 * a * b * x - 2 * a * t
 				- 2 * b * xt;
 	}
 
