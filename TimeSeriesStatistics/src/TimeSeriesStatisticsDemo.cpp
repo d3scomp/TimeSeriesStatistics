@@ -48,24 +48,24 @@ int main() {
 	StudentsDistribution lrb = s.getLrb();
 
 	cout << sampleCnt << " samples less than lrb "
-			<< lra.isLessThan(2, ALPHA_0_05) << endl;
+			<< lrb.isLessThan(2, ALPHA_0_05) << endl;
 	cout << sampleCnt << " samples less than or equal lrb "
-			<< lra.isLessThanOrEqual(2, ALPHA_0_05) << endl;
+			<< lrb.isLessThanOrEqual(2, ALPHA_0_05) << endl;
 	cout << sampleCnt << " samples greater than lrb "
-			<< lra.isGreaterThan(2, ALPHA_0_05) << endl;
+			<< lrb.isGreaterThan(2, ALPHA_0_05) << endl;
 	cout << sampleCnt << " samples greater than or equal lrb "
-			<< lra.isGreaterThanOrEqual(2, ALPHA_0_05) << endl;
+			<< lrb.isGreaterThanOrEqual(2, ALPHA_0_05) << endl;
 
 	StudentsDistribution lr = s.getLr(2);
 
 	cout << sampleCnt << " samples less than lr "
-			<< lra.isLessThan(2, ALPHA_0_05) << endl;
+			<< lr.isLessThan(2, ALPHA_0_05) << endl;
 	cout << sampleCnt << " samples less than or equal lr "
-			<< lra.isLessThanOrEqual(2, ALPHA_0_05) << endl;
+			<< lr.isLessThanOrEqual(2, ALPHA_0_05) << endl;
 	cout << sampleCnt << " samples greater than lr "
-			<< lra.isGreaterThan(2, ALPHA_0_05) << endl;
+			<< lr.isGreaterThan(2, ALPHA_0_05) << endl;
 	cout << sampleCnt << " samples greater than or equal lr "
-			<< lra.isGreaterThanOrEqual(2, ALPHA_0_05) << endl;
+			<< lr.isGreaterThanOrEqual(2, ALPHA_0_05) << endl;
 
 	TimeSeries<6000, 2000> sj;
 	for (size_t j = 1; j <= 5; ++j) {
