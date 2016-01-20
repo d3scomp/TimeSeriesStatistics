@@ -181,12 +181,12 @@ private:
 	double computeLrbVariance(size_t sampleCnt, double epsilon) {
 		// v^2 = (1/(n-2) * epsilon) / sum((x_i - avg(x))^2)
 		// v^2 = (1/(n-2) * epsilon) / (sum(x_i^2) - 2avg(x)*sum(x_i) + n*avg(x)^2)
+		// v^2 = (1/(n-2) * epsilon) / (sum(x_i^2) - avg(x)*sum(x_i))
 		double x = sum(sampleSum);
 		double x2 = sum(sampleSquaresSum);
 		double avgX = average(x, sampleCnt);
 
-		return (epsilon / (sampleCnt - 2))
-				/ (x2 - 2 * avgX * x + sampleCnt * avgX * avgX);
+		return (epsilon / (sampleCnt - 2)) / (x2 - avgX * x);
 	}
 
 	double computeLrMean(double a, double b, double x) {
