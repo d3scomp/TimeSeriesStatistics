@@ -19,6 +19,10 @@
  *
  *  Created on: 17. 1. 2016
  *      Author: Dominik Skoda <skoda@d3s.mff.cuni.cz>
+ *
+ *  Holds samples of a time series with a predefined history length.
+ *  Provides probability distribution over the mean and over
+ *  the linear regression of the data.
  */
 
 #include "TimeSeries.h"

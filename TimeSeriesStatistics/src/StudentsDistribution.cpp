@@ -19,6 +19,9 @@
  *
  *  Created on: 17. 1. 2016
  *      Author: Dominik Skoda <skoda@d3s.mff.cuni.cz>
+ *
+ *  This class provides methods to test hypothesis for given threshold on
+ *  computed Student's distribution.
  */
 
 #include "StudentsDistribution.h"

@@ -19,7 +19,7 @@
 // Author      : Dominik Skoda <skoda@d3s.mff.cuni.cz>
 // Version     :
 // Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
+// Description : Demonstrate the usage of TimeSeries and StudentsDistribution.
 //============================================================================
 
 #include <iostream>
@@ -31,8 +31,6 @@
 using namespace std;
 
 int main() {
-	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
-
 	size_t sampleCnt = 20;
 
 	TimeSeries<10000, 1000> s;

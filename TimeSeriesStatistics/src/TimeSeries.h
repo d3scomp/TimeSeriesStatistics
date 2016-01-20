@@ -19,6 +19,10 @@
  *
  *  Created on: 17. 1. 2016
  *      Author: Dominik Skoda <skoda@d3s.mff.cuni.cz>
+ *
+ *  Holds samples of a time series with a predefined history length.
+ *  Provides probability distribution over the mean and over
+ *  the linear regression of the data.
  */
 
 #ifndef TIMESERIES_H_
@@ -225,7 +229,7 @@ private:
 		return s;
 	}
 
-	double computeEpsilonSquaredSum(double a, double b, size_t sampleCnt) { // TODO: verify corectness
+	double computeEpsilonSquaredSum(double a, double b, size_t sampleCnt) {
 		// sum(epsilon_i^2) = sum((t_i - a - bx_i)^2)
 		// sum(epsilon_i^2) = sum(t_i^2) + n*a^2 + b^2*sum(x_i^2)
 		//						+ 2ab*sum(x_i) - 2a*sum(t_i) - 2b*sum(x_i*t_i)
