@@ -15,6 +15,7 @@
 #include <iostream>
 #include <math.h>
 #include "TDistribution.h"
+#include "TTable.h"
 
 class StudentsDistribution {
 public:
@@ -28,7 +29,7 @@ private:
 	size_t sampleCnt;
 	double mean;
 	double variance;
-
+	double getICDF(size_t df, ALPHAS a);
 };
 
 #endif /* STUDENTSDISTRIBUTION_H_ */

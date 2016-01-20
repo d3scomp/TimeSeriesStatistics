@@ -56,6 +56,39 @@ StudentsDistribution::StudentsDistribution(size_t sampleCnt, double mean, double
 		return sample >= mean - confidenceInterval;
 	}
 
+	double StudentsDistribution::getICDF(size_t df, ALPHAS a){
+		const double *icdfA = icdf[a];
+		int base = 0;
+		int major_idx = -1;
+		int base_incr = 0;
+		int minor_step = 1;
+		while(base + base_incr < df){
+			base += base_incr;
+			major_idx += 1;
+			minor_step = (1 << major_idx * boost);
+			base_incr = minor_step * minor_count;
+		}
+		df -= base;
+		if(df % minor_step == 0){
+			int minor_idx = df / minor_step - 1;
+			int idx = major_idx * minor_count + minor_idx;
+			std::cout << "base: " << base << " major_idx: " << major_idx
+					<< " minor_idx: " << minor_idx << " idx: " << idx << std::endl;
+			return icdfA[idx];
+		} else {
+			size_t minor_idx = df / minor_step;
+			int df_high = base + (minor_idx + 1) * minor_step;
+			int df_low = df_high - minor_step;
+			int idx_high = major_idx * minor_count + minor_idx;
+			int idx_low = idx_high - 1;
+			double delta = float(df) / (df_high - df_low);
+			std::cout << "base: " << base << " major_idx: " << major_idx
+					<< " minor_idx: " << minor_idx << " df_high: " << df_high
+					<< "df_low: " << df_low << " idx_high: " << idx_high
+					<< "idx_low: " << idx_low << " delta: " << delta << std::endl;
+			return icdfA[idx_high] * delta + icdfA[idx_low] * (1 - delta);
+		}
+	}
 
 /*static const double tTable_data[] = // For 0.95 level significance
 {0.0, 12.70615030, 4.30265572, 3.18244929, 2.77645085, 2.57057763,
