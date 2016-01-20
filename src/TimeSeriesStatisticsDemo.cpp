@@ -33,7 +33,7 @@ using namespace std;
 int main() {
 	size_t sampleCnt = 20;
 
-	TimeSeries<10000, 1000> s;
+	TimeSeries<10, 1000> s;
 	for (size_t i = 0; i < sampleCnt; ++i) {
 		s.addSample(i % 5, i * 300);
 	}
@@ -81,7 +81,7 @@ int main() {
 	cout << sampleCnt << " samples greater than or equal lr "
 			<< lr.isGreaterThanOrEqual(2, ALPHA_0_05) << endl;
 
-	TimeSeries<6000, 2000> sj;
+	TimeSeries<3, 2000> sj;
 	for (size_t j = 1; j <= 5; ++j) {
 		sj.addSample(j, j * 300);
 		StudentsDistribution m = sj.getMean();
