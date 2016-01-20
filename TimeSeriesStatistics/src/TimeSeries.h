@@ -136,13 +136,13 @@ private:
 
 	double computeMeanVariance(size_t sampleCnt) {
 		// Corrected sample variance
-		// v^2 = 1/(N-1) * sum(x_i - avg(x))^2
-		// v^2 = 1/(N-1) * (sum(x_i^2) - 2avg(x)*sum(x_i) + n*avg(x)^2)
+		// v^2 = ( 1/(N-1) * sum(x_i - avg(x))^2 ) / N
+		// v^2 = ( 1/(N-1) * (sum(x_i^2) - 2avg(x)*sum(x_i) + n*avg(x)^2) ) / N
 		double x2 = sum(sampleSquaresSum);
 		double x = sum(sampleSum);
 		double avgX = average(x, sampleCnt);
 
-		return (x2 - 2*avgX*x + sampleCnt*avgX*avgX) / (sampleCnt - 1);
+		return ((x2 - 2*avgX*x + sampleCnt*avgX*avgX) / (sampleCnt - 1)) / sampleCnt;
 	}
 
 	double computeLraMean(size_t sampleCnt) {
