@@ -30,8 +30,6 @@
 #define MAX_SAMPLES	100
 #define CONFIDENCE 0.95
 
-#include <cstdlib>
-#include <iostream>
 #include <math.h>
 #include "TTable.h"
 

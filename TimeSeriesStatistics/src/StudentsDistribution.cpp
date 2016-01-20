@@ -25,7 +25,6 @@
  */
 
 #include "StudentsDistribution.h"
-#include <math.h>
 
 /*
  * df - degrees of freedom
@@ -99,8 +98,8 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 		if(df % minor_step == 0){
 			int minor_idx = df / minor_step - 1;
 			int idx = major_idx * minor_count + minor_idx;
-			std::cout << "base: " << base << " major_idx: " << major_idx
-					<< " minor_idx: " << minor_idx << " idx: " << idx << std::endl;
+//			std::cout << "base: " << base << " major_idx: " << major_idx
+//					<< " minor_idx: " << minor_idx << " idx: " << idx << std::endl;
 			return icdfA[idx];
 		} else {
 			size_t minor_idx = df / minor_step;
@@ -109,10 +108,10 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 			int idx_high = major_idx * minor_count + minor_idx;
 			int idx_low = idx_high - 1;
 			double delta = float(df) / (df_high - df_low);
-			std::cout << "base: " << base << " major_idx: " << major_idx
-					<< " minor_idx: " << minor_idx << " df_high: " << df_high
-					<< "df_low: " << df_low << " idx_high: " << idx_high
-					<< "idx_low: " << idx_low << " delta: " << delta << std::endl;
+//			std::cout << "base: " << base << " major_idx: " << major_idx
+//					<< " minor_idx: " << minor_idx << " df_high: " << df_high
+//					<< "df_low: " << df_low << " idx_high: " << idx_high
+//					<< "idx_low: " << idx_low << " delta: " << delta << std::endl;
 			return icdfA[idx_high] * delta + icdfA[idx_low] * (1 - delta);
 		}
 	}
