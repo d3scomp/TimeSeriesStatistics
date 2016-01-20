@@ -128,37 +128,3 @@ extern const double icdf[{1}][{2}];
 	len(alphas), idfTableSize
 ))
 out.close()
-
-
-
-"""
-
-def getICDF(df, icdfTable):
-	base = 0
-	majorIdx = -1
-	base_incr = 0
-	minorStep = 1
-	while base + base_incr < df:
-		base += base_incr
-		majorIdx += 1
-		minorStep = (1 << majorIdx * boost)
-		base_incr = minorStep * minorCount
-		
-	df -= base
-	if df % minorStep == 0:
-		minorIdx = df / minorStep - 1
-		idx = majorIdx * minorCount + minorIdx
-		# stdout.write('base: {}  majorIdx: {}  minorIdx: {}  idx: {}\n'.format(base, majorIdx, minorIdx, idx))
-		return icdfTable[idx]
-	else:
-		minorIdx = df / minorStep
-		df_high = base + (minorIdx + 1) * minorStep
-		df_low = df_high - minorStep
-		idx_high = majorIdx * minorCount + minorIdx
-		idx_low = idx_high - 1
-		delta = float(df) / (df_high - df_low)
-		# stdout.write('base: {}  majorIdx: {}  minorIdx: {}  df_high: {}  df_low: {}  idx_high: {}  idx_low: {}  delta: {}\n'.format(base, majorIdx, minorIdx, df_high, df_low, idx_high, idx_low, delta))
-		return icdfTable[idx_high] * delta + icdfTable[idx_low] * (1 - delta)
-		
-
-"""
