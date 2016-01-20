@@ -140,16 +140,16 @@ private:
 		// v^2 = ( 1/(N-1) * (sum(x_i^2) - 2avg(x)*sum(x_i) + n*avg(x)^2) ) / N
 		double x2 = sum(sampleSquaresSum);
 		double x = sum(sampleSum);
-		double avgX = average(x, sampleCnt);
+		double avgX = x / sampleCnt;
 
 		return ((x2 - 2*avgX*x + sampleCnt*avgX*avgX) / (sampleCnt - 1)) / sampleCnt;
 	}
 
 	double computeLraMean(size_t sampleCnt) {
 		// a = avg(t) - b*avg(x)
-		double avgT = average(sum(timeSum), sampleCnt);
+		double avgT = sum(timeSum) / sampleCnt;
 		double b = computeLrbMean(sampleCnt);
-		double avgX = average(sum(sampleSum), sampleCnt);
+		double avgX = sum(sampleSum) / sampleCnt;
 
 		return avgT - b * avgX;
 	}
@@ -166,11 +166,11 @@ private:
 
 	double computeLrbMean(size_t sampleCnt) {
 		// b = (avg(xt) - avg(x)avg(t)) / (avg(x^2) - avg(x)^2)
-		double avgXT = average(sum(sampleTimeSum), sampleCnt);
-		double avgXavgT = average(sum(sampleSum), sampleCnt)
-				* average(sum(timeSum), sampleCnt);
-		double avgX2 = average(sum(sampleSquaresSum), sampleCnt);
-		double avgX = average(sum(sampleSum), sampleCnt);
+		double avgXT = sum(sampleTimeSum) / sampleCnt;
+		double avgXavgT = (sum(sampleSum) / sampleCnt)
+				* (sum(timeSum) / sampleCnt);
+		double avgX2 = sum(sampleSquaresSum) / sampleCnt;
+		double avgX = sum(sampleSum) / sampleCnt;
 
 		return (avgXT - avgXavgT) / (avgX2 - avgX * avgX);
 	}
@@ -184,7 +184,7 @@ private:
 		// v^2 = (1/(n-2) * epsilon) / (sum(x_i^2) - avg(x)*sum(x_i))
 		double x = sum(sampleSum);
 		double x2 = sum(sampleSquaresSum);
-		double avgX = average(x, sampleCnt);
+		double avgX = x / sampleCnt;
 
 		return (epsilon / (sampleCnt - 2)) / (x2 - avgX * x);
 	}
@@ -202,18 +202,14 @@ private:
 		// v^2 = 1/(n-2) * epsilon * (1/n + (point - avg(x))^2 / (sum(x_i^2) - 2*avg(x)*sum(x_i) + n*avg(x^2)))
 		double x = sum(sampleSum);
 		double x2 = sum(sampleSquaresSum);
-		double avgX = average(x, sampleCnt);
-		double avgX2 = average(x2, sampleCnt);
+		double avgX = x / sampleCnt;
+		double avgX2 = x2 / sampleCnt;
 		double pAvgX = (point - avgX);
 
 		return epsilon / (sampleCnt - 2)
 				* (1 / (double) sampleCnt
 						+ pAvgX * pAvgX
 								/ (x2 - 2 * avgX * x + sampleCnt * avgX2));
-	}
-
-	double average(double sum, size_t cnt) {
-		return sum / cnt;
 	}
 
 	double sum(double *samples) {
