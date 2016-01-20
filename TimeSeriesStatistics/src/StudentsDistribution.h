@@ -19,17 +19,20 @@
 
 class StudentsDistribution {
 public:
-	StudentsDistribution(size_t sampleCnt, double mean, double variance);
-	bool isLessThan(double sample, double confidence);
-	bool isLessThanOrEqual(double sample, double confidence);
-	bool isGreaterThan(double sample, double confidence);
-	bool isGreaterThanOrEqual(double sample, double confidence);
+	/*
+	 * df - degrees of freedom
+	 */
+	StudentsDistribution(size_t df, double mean, double variance);
+	bool isLessThan(double sample, ALPHAS a);
+	bool isLessThanOrEqual(double sample, ALPHAS a);
+	bool isGreaterThan(double sample, ALPHAS a);
+	bool isGreaterThanOrEqual(double sample, ALPHAS a);
 
 private:
-	size_t sampleCnt;
+	size_t df; // degrees of freedom
 	double mean;
 	double variance;
-	double getICDF(size_t df, ALPHAS a);
+	double getICDF(ALPHAS a);
 };
 
 #endif /* STUDENTSDISTRIBUTION_H_ */

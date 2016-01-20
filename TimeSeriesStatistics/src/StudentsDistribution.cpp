@@ -6,57 +6,45 @@
  */
 
 #include "StudentsDistribution.h"
+#include <math.h>
 
-StudentsDistribution::StudentsDistribution(size_t sampleCnt, double mean, double variance)
-		: sampleCnt(sampleCnt), mean(mean), variance(variance) {
+/*
+ * df - degrees of freedom
+ */
+StudentsDistribution::StudentsDistribution(size_t df, double mean, double variance)
+		: df(df), mean(mean), variance(variance) {
 
 	}
 
-	bool StudentsDistribution::isLessThan(double sample, double confidence){
-		TDistribution td;
-		int err;
-		double confidenceInterval = td.tnc(confidence, sampleCnt-1, 0, &err);
-		if(err){
-			std::cerr << "tnc exited with error " << err << std::endl;
- 		}
+	bool StudentsDistribution::isLessThan(double sample, ALPHAS a){
+		double dist = (mean - sample) / sqrt(variance);
+		double icdfValue = getICDF(a);
 
-		return sample < mean + confidenceInterval;
+		return -icdfValue >= dist;
 	}
 
-	bool StudentsDistribution::isLessThanOrEqual(double sample, double confidence){
-		TDistribution td;
-		int err;
-		double confidenceInterval = td.tnc(confidence, sampleCnt-1, 0, &err);
-		if(err){
-			std::cerr << "tnc exited with error " << err << std::endl;
- 		}
+	bool StudentsDistribution::isLessThanOrEqual(double sample, ALPHAS a){
+		double dist = (mean - sample) / sqrt(variance);
+		double icdfValue = getICDF(a);
 
-		return sample <= mean + confidenceInterval;
+		return -icdfValue > dist;
 	}
 
-	bool StudentsDistribution::isGreaterThan(double sample, double confidence){
-		TDistribution td;
-		int err;
-		double confidenceInterval = td.tnc(confidence, sampleCnt-1, 0, &err);
-		if(err){
-			std::cerr << "tnc exited with error " << err << std::endl;
- 		}
+	bool StudentsDistribution::isGreaterThan(double sample, ALPHAS a){
+		double dist = (mean - sample) / sqrt(variance);
+		double icdfValue = getICDF(a);
 
-		return sample > mean - confidenceInterval;
+		return -icdfValue <= dist;
 	}
 
-	bool StudentsDistribution::isGreaterThanOrEqual(double sample, double confidence){
-		TDistribution td;
-		int err;
-		double confidenceInterval = td.tnc(confidence, sampleCnt-1, 0, &err);
-		if(err){
-			std::cerr << "tnc exited with error " << err << std::endl;
- 		}
+	bool StudentsDistribution::isGreaterThanOrEqual(double sample, ALPHAS a){
+		double dist = (mean - sample) / sqrt(variance);
+		double icdfValue = getICDF(a);
 
-		return sample >= mean - confidenceInterval;
+		return -icdfValue < dist;
 	}
 
-	double StudentsDistribution::getICDF(size_t df, ALPHAS a){
+	double StudentsDistribution::getICDF(ALPHAS a){
 		const double *icdfA = icdf[a];
 		int base = 0;
 		int major_idx = -1;

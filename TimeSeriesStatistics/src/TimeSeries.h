@@ -54,7 +54,7 @@ public:
 		double mean = computeMean(sampleCnt);
 		double variance = computeMeanVariance(sampleCnt, mean);
 
-		return StudentsDistribution(sampleCnt, mean, variance);
+		return StudentsDistribution(sampleCnt-1, mean, variance);
 	}
 
 	StudentsDistribution getLra() {
@@ -65,7 +65,7 @@ public:
 		double varianceB = computeLrbVariance(sampleCnt, epsilon);
 		double varianceA = computeLraVariance(sampleCnt, varianceB);
 
-		return StudentsDistribution(sampleCnt, a, varianceA);
+		return StudentsDistribution(sampleCnt-2, a, varianceA);
 	}
 
 	StudentsDistribution getLrb() {
@@ -75,7 +75,7 @@ public:
 		double epsilon = computeEpsilonSquaredSum(a, b, sampleCnt);
 		double variance = computeLrbVariance(sampleCnt, epsilon);
 
-		return StudentsDistribution(sampleCnt, b, variance);
+		return StudentsDistribution(sampleCnt-2, b, variance);
 	}
 
 	StudentsDistribution getLr(double x) {
@@ -86,7 +86,7 @@ public:
 		double epsilon = computeEpsilonSquaredSum(a, b, sampleCnt);
 		double variance = computeLrVariance(sampleCnt, epsilon, x);
 
-		return StudentsDistribution(sampleCnt, mean, variance);
+		return StudentsDistribution(sampleCnt-2, mean, variance);
 	}
 
 private:
