@@ -72,7 +72,7 @@ public:
 	StudentsDistribution getMean() {
 		size_t sampleCnt = computeSampleCnt();
 		double mean = computeMean(sampleCnt);
-		double variance = computeMeanVariance(sampleCnt, mean);
+		double variance = computeMeanVariance(sampleCnt);
 
 		return StudentsDistribution(sampleCnt-1, mean, variance);
 	}
@@ -134,12 +134,15 @@ private:
 		return m;
 	}
 
-	double computeMeanVariance(size_t sampleCnt, double mean) {
-		// v^2 = (1/N * sum(x_i^2)) - m^2
-		double v = sum(sampleSquaresSum);
-		v /= sampleCnt;
-		v -= (mean * mean);
-		return v;
+	double computeMeanVariance(size_t sampleCnt) {
+		// Corrected sample variance
+		// v^2 = 1/(N-1) * sum(x_i - avg(x))^2
+		// v^2 = 1/(N-1) * (sum(x_i^2) - 2avg(x)*sum(x_i) + n*avg(x)^2)
+		double x2 = sum(sampleSquaresSum);
+		double x = sum(sampleSum);
+		double avgX = average(x, sampleCnt);
+
+		return (x2 - 2*avgX*x + sampleCnt*avgX*avgX) / (sampleCnt - 1);
 	}
 
 	double computeLraMean(size_t sampleCnt) {
@@ -177,7 +180,7 @@ private:
 	 */
 	double computeLrbVariance(size_t sampleCnt, double epsilon) {
 		// v^2 = (1/(n-2) * epsilon) / sum((x_i - avg(x))^2)
-		// v^2 = (1/(n-2) * epsilon) / (sum(x_i^2) - 2avg(x)*sum(x_i) + n*avg(x)^2
+		// v^2 = (1/(n-2) * epsilon) / (sum(x_i^2) - 2avg(x)*sum(x_i) + n*avg(x)^2)
 		double x = sum(sampleSum);
 		double x2 = sum(sampleSquaresSum);
 		double avgX = average(x, sampleCnt);
