@@ -29,6 +29,7 @@
 #define TIMESERIES_H_
 
 #include "StudentsDistribution.h"
+#include <math.h>
 
 /*
  * WindowSize - The number of subWindows keep the history of
@@ -79,8 +80,8 @@ public:
 		size_t sampleCnt = computeSampleCnt();
 		double a = computeLraMean(sampleCnt);
 		double b = computeLrbMean(sampleCnt);
-		double epsilon = computeEpsilonSquaredSum(a, b, sampleCnt);
-		double varianceB = computeLrbVariance(sampleCnt, epsilon);
+		double e2 = computeEpsilonSquaredSum(a, b, sampleCnt);
+		double varianceB = computeLrbVariance(sampleCnt, e2);
 		double varianceA = computeLraVariance(sampleCnt, varianceB);
 
 		return StudentsDistribution(sampleCnt-2, a, varianceA);
@@ -90,8 +91,8 @@ public:
 		size_t sampleCnt = computeSampleCnt();
 		double a = computeLraMean(sampleCnt);
 		double b = computeLrbMean(sampleCnt);
-		double epsilon = computeEpsilonSquaredSum(a, b, sampleCnt);
-		double variance = computeLrbVariance(sampleCnt, epsilon);
+		double e2 = computeEpsilonSquaredSum(a, b, sampleCnt);
+		double variance = computeLrbVariance(sampleCnt, e2);
 
 		return StudentsDistribution(sampleCnt-2, b, variance);
 	}
@@ -101,8 +102,8 @@ public:
 		double a = computeLraMean(sampleCnt);
 		double b = computeLrbMean(sampleCnt);
 		double mean = computeLrMean(a, b, x);
-		double epsilon = computeEpsilonSquaredSum(a, b, sampleCnt);
-		double variance = computeLrVariance(sampleCnt, epsilon, x);
+		double e2 = computeEpsilonSquaredSum(a, b, sampleCnt);
+		double variance = computeLrVariance(sampleCnt, e2, x);
 
 		return StudentsDistribution(sampleCnt-2, mean, variance);
 	}
@@ -126,129 +127,97 @@ private:
 	}
 
 	double computeMean(size_t n) {
-		// m = 1/N * sum(x_i)
+		if (n <= 0) {
+			return NAN;
+		}
+
 		double m = sum(sampleSum);
-		return n != 0
-				? m / n
-				: 0;
+		return m / n;
 	}
 
 	double computeMeanVariance(size_t n) {
-		// Corrected sample variance
-		// v^2 = ( 1/(N-1) * sum(x_i - avg(x))^2 ) / N
-		// v^2 = ( 1/(N-1) * (sum(x_i^2) - 2avg(x)*sum(x_i) + n*avg(x)^2) ) / N
-		// v^2 = ( 1/(N-1) * (sum(x_i^2) - 2avg(x)*sum(x_i) + x*avg(x)) ) / N
-
-		// Check that division by zero won't occur
-		if(n < 2){
-			return 0;
+		if (n <= 1) {
+			return NAN;
 		}
 
 		double x2 = sum(sampleSquaresSum);
 		double x = sum(sampleSum);
-		double avgX = x / n;
 
-		return ((x2 - 2*avgX*x + x*avgX) / (n - 1)) / n;
+		return (x2 - x*x/n) / (n - 1);
 	}
 
 	double computeLraMean(size_t n) {
-		// a = avg(t) - b*avg(x)
-
-		// Check that division by zero won't occur
-		if(n == 0){
-			return 0;
+		if (n <= 0) {
+			return NAN;
 		}
 
-		double avgT = sum(timeSum) / n;
+		double y = sum(sampleSum);
+		double x = sum(timeSum);
 		double b = computeLrbMean(n);
-		double avgX = sum(sampleSum) / n;
 
-		return avgT - b * avgX;
+		return (y - b * x) / n;
 	}
 
-	/*
-	 * varianceB = v_b^2
-	 */
 	double computeLraVariance(size_t n, double varianceB) {
-		// v^2 = v_b^2 * 1/n * sum(x_i^2)
-		double x2 = sum(sampleSquaresSum);
+		if (n <= 0) {
+			return NAN;
+		}
 
-		return n != 0
-				? varianceB * x2 / n
-				: 0;
+		double x2 = sum(timeSquaresSum);
+
+		return varianceB * x2 / n;
 	}
 
 	double computeLrbMean(size_t n) {
-		// b = (avg(xt) - avg(x)avg(t)) / (avg(x^2) - avg(x)^2)
-
-		// Check that division by zero won't occur
-		if(n == 0){
-			return 0;
+		if (n <= 0) {
+			return NAN;
 		}
 
-		double avgXT = sum(sampleTimeSum) / n;
-		double avgXavgT = (sum(sampleSum) / n)
-				* (sum(timeSum) / n);
-		double avgX2 = sum(sampleSquaresSum) / n;
-		double avgX = sum(sampleSum) / n;
-		double div = avgX2 - avgX * avgX;
+		double x = sum(timeSum);
+		double x2 = sum(timeSquaresSum);
+		double y = sum(sampleSum);
+		double xy = sum(sampleTimeSum);
 
-		return div != 0
-				? (avgXT - avgXavgT) / div
-				: 0;
+		double nom = xy - x*y / n;
+		double denom = x2 - x*x / n;
+		return denom != 0 ? nom / denom : NAN;
 	}
 
 	/*
-	 * epsilon = sum(epsilon_i^2)
+	 * e2 = computeEpsilonSquaredSum(...)
 	 */
-	double computeLrbVariance(size_t n, double epsilon) {
-		// v^2 = (1/(n-2) * epsilon) / sum((x_i - avg(x))^2)
-		// v^2 = (1/(n-2) * epsilon) / (sum(x_i^2) - 2avg(x)*sum(x_i) + n*avg(x)^2)
-		// v^2 = (1/(n-2) * epsilon) / (sum(x_i^2) - avg(x)*sum(x_i))
-
-		// Check that division by zero won't occur
-		if(n == 0){
-			return 0;
+	double computeLrbVariance(size_t n, double e2) {
+		if (n <= 0) {
+			return NAN;
 		}
 
-		double x = sum(sampleSum);
-		double x2 = sum(sampleSquaresSum);
-		double avgX = x / n;
-		double div = x2 - avgX * x;
+		double x = sum(timeSum);
+		double x2 = sum(timeSquaresSum);
 
-		return div != 0 && n != 2
-				? (epsilon / (n - 2)) / div
-				: 0;
+		double num = e2 / (n - 2);
+		double denom = x2 - x*x/n;
+		return denom != 0 ? nom / denom : NAN;
 	}
 
 	double computeLrMean(double a, double b, double x) {
-		// y = a + b*x
 		return a + b * x;
 	}
 
 	/*
 	 * point is the point of interest
 	 */
-	double computeLrVariance(size_t n, double epsilon, double point) {
-		// v^2 = 1/(n-2) * epsilon * (1/n + (point - avg(x))^2 / sum(x_i - avg(x))^2)
-		// v^2 = 1/(n-2) * epsilon * (1/n + (point - avg(x))^2 / (sum(x_i^2) - 2*avg(x)*sum(x_i) + n*avg(x^2)))
-		// v^2 = 1/(n-2) * epsilon * (1/n + (point - avg(x))^2 / (sum(x_i^2) - 2*avg(x)*sum(x_i) + x^2))
-		// v^2 = 1/(n-2) * epsilon * (1/n + (point - avg(x))^2 / (2*sum(x_i^2) - 2*avg(x)*sum(x_i)))
-
+	double computeLrVariance(size_t n, double e2, double point) {
 		// Check that division by zero won't occur
-		if(n == 0){
-			return 0;
+		if (n <= 2) {
+			return NAN;
 		}
 
 		double x = sum(sampleSum);
 		double x2 = sum(sampleSquaresSum);
-		double avgX = x / n;
-		double pAvgX = (point - avgX);
-		double div = 2*x2 - 2 * avgX * x;
+		double pAvgX = point - x/n;
+		double denom = x2 - x*x/n;
 
-		return div != 0 && n != 2
-				? epsilon / (n - 2) * (1 / (double) n + pAvgX * pAvgX / div)
-				: 0;
+		return denom != 0 ? (e2 / (n-2)) * (1.0 / n + pAvgX * pAvgX / denom) : NAN;
 	}
 
 	double sum(double *samples) {
@@ -268,18 +237,17 @@ private:
 	}
 
 	double computeEpsilonSquaredSum(double a, double b, size_t n) {
-		// sum(epsilon_i^2) = sum((t_i - a - bx_i)^2)
-		// sum(epsilon_i^2) = sum(t_i^2) + n*a^2 + b^2*sum(x_i^2)
-		//						+ 2ab*sum(x_i) - 2a*sum(t_i) - 2b*sum(x_i*t_i)
+		if (n <= 2) {
+			return NAN;
+		}
 
-		double t2 = sum(timeSquaresSum);
-		double x2 = sum(sampleSquaresSum);
-		double x = sum(sampleSum);
-		double t = sum(timeSum);
-		double xt = sum(sampleTimeSum);
+		double x = sum(timeSum);
+		double x2 = sum(timeSquaresSum);
+		double y = sum(sampleSum);
+		double y2 = sum(sampleSquaresSum);
+		double xy = sum(sampleTimeSum);
 
-		return t2 + n * a * a + b * b * x2 + 2 * a * b * x - 2 * a * t
-				- 2 * b * xt;
+		return y2 + n*a*a + b*b*x2 - 2*a*y - 2*b*xy + 2*a*b*x
 	}
 
 };

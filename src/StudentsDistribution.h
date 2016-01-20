@@ -27,10 +27,6 @@
 #ifndef STUDENTSDISTRIBUTION_H_
 #define STUDENTSDISTRIBUTION_H_
 
-#define MAX_SAMPLES	100
-#define CONFIDENCE 0.95
-
-#include <math.h>
 #include "TTable.h"
 
 class StudentsDistribution {
