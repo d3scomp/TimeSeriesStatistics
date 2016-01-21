@@ -8,12 +8,12 @@
 #ifndef TTABLE_H_
 #define TTABLE_H_
 
-enum ALPHAS {ALPHA_0_025, ALPHA_0_05};
+enum ALPHAS {ALPHA_0_005, ALPHA_0_00625, ALPHA_0_001, ALPHA_0_0125, ALPHA_0_025, ALPHA_0_05};
 
 extern const int minor_count;
 extern const int boost;
 extern const int df_max;
 
-extern const double icdf[2][500];
+extern const double icdf[6][900];
 
 #endif /* TTABLE_H_ */
