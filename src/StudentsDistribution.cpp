@@ -27,12 +27,14 @@
 #include "StudentsDistribution.h"
 #include <math.h>
 
+int StudentsDistribution::DEFAULT_ALPHA_INDEX = 0;
+
 /*
  * df - degrees of freedom
  */
 StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 		: df(df), mean(mean), variance(variance) {
-		resetDefaultAlpha();
+		resetToDefaultAlpha();
 	}
 
 	bool StudentsDistribution::operator<=(double threshold) {

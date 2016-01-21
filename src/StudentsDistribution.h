@@ -47,7 +47,8 @@ public:
 	inline double getVariance() { return variance; }
 
 	void setAlpha(ALPHAS a) { this->a = a; }
-	void resetDefaultAlpha() { a = static_cast<ALPHAS>(DEFAULT_APLHA_INDEX); }
+	void resetToDefaultAlpha() { a = static_cast<ALPHAS>(DEFAULT_ALPHA_INDEX); }
+	static void setDefaultAlpha(int index) { DEFAULT_ALPHA_INDEX = index; }
 	ALPHAS getAlpha() { return a; }
 
 private:
@@ -59,7 +60,7 @@ private:
 	double getICDF(int dfValue);
 	inline double getICDF() { return getICDF(df); }
 
-	static const int DEFAULT_APLHA_INDEX = 0;
+	static int DEFAULT_ALPHA_INDEX;
 };
 
 #endif /* STUDENTSDISTRIBUTION_H_ */

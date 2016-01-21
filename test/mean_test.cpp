@@ -39,6 +39,7 @@ int main() {
 	cout << "Computed mean: " << m.getMean() << " Computed variance: " << m.getVariance() << endl;
 
 	m.setAlpha(ALPHA_0_05);
+
 	cout << "alpha = " << m.getAlpha() << endl;
 	cout << endl;
 	cout << "m <= 1.94  ... " << (m <= 1.94) << "  (should be false)" << endl;
