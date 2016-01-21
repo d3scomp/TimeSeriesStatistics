@@ -47,6 +47,23 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 		return icdfValue >= dist;
 	}
 
+	bool StudentsDistribution::isLessThanOrEqual(StudentsDistribution other, ALPHAS a) {
+		double combinedMean = this->mean - other.mean;
+		double combinedVariance = this->variance + other.variance;
+
+		int combinedDf = (combinedVariance*combinedVariance)
+				/ ((this->variance*this->variance) / (double) this->df
+						+ (other.variance*other.variance) / (double) other.df);
+		if (combinedDf < 1) {
+			// accept hypothesis if there is not enough samples
+			return true;
+		}
+
+		double icdfValue = -getICDF(a, combinedDf);
+
+		return icdfValue >= combinedMean / sqrt(combinedVariance);
+	}
+
 	bool StudentsDistribution::isGreaterThanOrEqual(double threshold, ALPHAS a) {
 		if (df < 1) {
 			// accept hypothesis if there is not enough samples
@@ -59,7 +76,24 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 		return icdfValue <= dist;
 	}
 
-	double StudentsDistribution::getICDF(ALPHAS a) {
+	bool StudentsDistribution::isGreaterThanOrEqual(StudentsDistribution other, ALPHAS a) {
+		double combinedMean = this->mean - other.mean;
+		double combinedVariance = this->variance + other.variance;
+
+		int combinedDf = (combinedVariance*combinedVariance)
+				/ ((this->variance*this->variance) / (double) this->df
+						+ (other.variance*other.variance) / (double) other.df);
+		if (combinedDf < 1) {
+			// accept hypothesis if there is not enough samples
+			return true;
+		}
+
+		double icdfValue = getICDF(a, combinedDf);
+
+		return icdfValue <= combinedMean / sqrt(combinedVariance);
+	}
+
+	double StudentsDistribution::getICDF(ALPHAS a, int dfValue) {
 		/* Though declared as one-dimensional, icdfA (a table with critical values for a particular alpha) is essentially a two dimensional table. 
 		   The rows are indexed by major_idx, the columns are indexed by minor_idx. 
 		   The first row corresponds to critical values for degrees of freedom 1, 2, 3, ..., minor_count
@@ -75,24 +109,24 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 		int major_idx = -1;
 		int base_incr = 0;
 		int minor_step = 1;
-		while (base + base_incr < df) {
+		while (base + base_incr < dfValue) {
 			base += base_incr;
 			major_idx += 1;
 			minor_step = (1 << major_idx * ttable::boost);
 			base_incr = minor_step * ttable::minor_count;
 		}
-		df -= base;
-		if (df % minor_step == 0) {
-			int minor_idx = df / minor_step - 1;
+		dfValue -= base;
+		if (dfValue % minor_step == 0) {
+			int minor_idx = dfValue / minor_step - 1;
 			int idx = major_idx * ttable::minor_count + minor_idx;
 			return icdfA[idx];
 		} else {
-			int minor_idx = df / minor_step;
+			int minor_idx = dfValue / minor_step;
 			int df_high = base + (minor_idx + 1) * minor_step;
 			int df_low = df_high - minor_step;
 			int idx_high = major_idx * ttable::minor_count + minor_idx;
 			int idx_low = idx_high - 1;
-			double delta = double(df) / (df_high - df_low);
+			double delta = double(dfValue) / (df_high - df_low);
 			return icdfA[idx_high] * delta + icdfA[idx_low] * (1 - delta);
 		}
 	}

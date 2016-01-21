@@ -34,10 +34,14 @@ public:
 	StudentsDistribution(int df, double mean, double variance);
 
 	bool isLessThanOrEqual(double threshold, ALPHAS a);
+	bool isLessThanOrEqual(StudentsDistribution other, ALPHAS a);
 	bool isGreaterThanOrEqual(double threshold, ALPHAS a);
+	bool isGreaterThanOrEqual(StudentsDistribution other, ALPHAS a);
 
 	inline bool isLessThan(double threshold, ALPHAS a) { return !isGreaterThanOrEqual(threshold, a); }
+	inline bool isLessThan(StudentsDistribution other, ALPHAS a) { return !isGreaterThanOrEqual(other, a); }
 	inline bool isGreaterThan(double threshold, ALPHAS a) { return !isLessThanOrEqual(threshold, a); }
+	inline bool isGreaterThan(StudentsDistribution other, ALPHAS a) { return !isLessThanOrEqual(other, a); }
 
 	inline double getMean() { return mean; }
 	inline double getVariance() { return variance; }
@@ -46,7 +50,8 @@ private:
 	int df; // degrees of freedom
 	double mean;
 	double variance;
-	double getICDF(ALPHAS a);
+	inline double getICDF(ALPHAS a, int dfValue);
+	double getICDF(ALPHAS a) { return getICDF(a, df); }
 };
 
 #endif /* STUDENTSDISTRIBUTION_H_ */
