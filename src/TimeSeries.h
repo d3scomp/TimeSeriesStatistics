@@ -52,20 +52,51 @@ public:
 		while ((time + WindowSize) < sampleTime) { // While here to skip potential unfilled subWindows
 			// If the sample_time belongs to the next time SubWindow
 			time += WindowSize; // Move to next time window and initialize it
+
 			index = nextIndex();
+
+			totalSampleCounts -= sampleCounts[index];	
 			sampleCounts[index] = 0;
+
+			totalSampleSum -= sampleSum[index];
 			sampleSum[index] = 0;
+
+			totalSampleSquaresSum -= sampleSquaresSum[index];
 			sampleSquaresSum[index] = 0;
+
+			totalTimeSum -= timeSum[index];
 			timeSum[index] = 0;
+
+			totalTimeSquaresSum -= timeSquaresSum[index];
 			timeSquaresSum[index] = 0;
+
+			totalSampleTimeSum -= sampleTimeSum[index];
 			sampleTimeSum[index] = 0;
+						
 		}
+
+		totalSampleCounts += 1;
 		sampleCounts[index] += 1;
+
+		totalSampleSum += sample;
 		sampleSum[index] += sample;
-		sampleSquaresSum[index] += sample * sample;
-		timeSum[index] += sampleTime;
-		timeSquaresSum[index] += sampleTime * sampleTime;
-		sampleTimeSum[index] += sample * sampleTime;
+
+		double sample2 = sample * sample;
+		totalSampleSquaresSum += sample2;
+		sampleSquaresSum[index] += sample2;
+
+		double sampleTimeD = sampleTime;
+
+		totalTimeSum += sampleTimeD;
+		timeSum[index] += sampleTimeD;
+		
+		double sampleTime2 = sampleTimeD * sampleTimeD;
+		totalTimeSquaresSum += sampleTime2;
+		timeSquaresSum[index] += sampleTime2;
+
+		double sampleSampleTime = sample * sampleTime;
+		totalSampleTimeSum += sampleSampleTime;
+		sampleTimeSum[index] += sampleSampleTime;
 	}
 
 	StudentsDistribution getMean() {
@@ -118,12 +149,20 @@ private:
 	double timeSquaresSum[WindowCnt]; // sum(t_i^2)
 	double sampleTimeSum[WindowCnt]; // sum(x_i*t_i)
 
-	int nextIndex() {
+	int totalSampleCounts;
+	double totalSampleSum;
+	double totalSampleSquaresSum;
+	double totalTimeSum;
+	double totalTimeSquaresSum;
+	double totalSampleTimeSum;
+
+
+	inline int nextIndex() {
 		return (index + 1) % WindowCnt;
 	}
 
-	int computeSampleCnt() {
-		return sum(sampleCounts);
+	inline int computeSampleCnt() {
+		return totalSampleCounts;
 	}
 
 	double computeMean(int n) {
@@ -131,7 +170,7 @@ private:
 			return NAN;
 		}
 
-		double m = sum(sampleSum);
+		double m = totalSampleSum;
 		return m / n;
 	}
 
@@ -140,8 +179,8 @@ private:
 			return NAN;
 		}
 
-		double x2 = sum(sampleSquaresSum);
-		double x = sum(sampleSum);
+		double x2 = totalSampleSquaresSum;
+		double x = totalSampleSum;
 
 		return (x2 - x*x/n) / ((n - 1) * n);
 	}
@@ -151,8 +190,8 @@ private:
 			return NAN;
 		}
 
-		double y = sum(sampleSum);
-		double x = sum(timeSum);
+		double y = totalSampleSum;
+		double x = totalTimeSum;
 		double b = computeLrbMean(n);
 
 		return (y - b * x) / n;
@@ -163,7 +202,7 @@ private:
 			return NAN;
 		}
 
-		double x2 = sum(timeSquaresSum);
+		double x2 = totalTimeSquaresSum;
 
 		return varianceB * x2 / n;
 	}
@@ -173,13 +212,14 @@ private:
 			return NAN;
 		}
 
-		double x = sum(timeSum);
-		double x2 = sum(timeSquaresSum);
-		double y = sum(sampleSum);
-		double xy = sum(sampleTimeSum);
+		double x = totalTimeSum;
+		double x2 = totalTimeSquaresSum;
+		double y = totalSampleSum;
+		double xy = totalSampleTimeSum;
 
 		double nom = xy - x*y / n;
 		double denom = x2 - x*x / n;
+
 		return denom != 0 ? nom / denom : NAN;
 	}
 
@@ -191,8 +231,8 @@ private:
 			return NAN;
 		}
 
-		double x = sum(timeSum);
-		double x2 = sum(timeSquaresSum);
+		double x = totalTimeSum;
+		double x2 = totalTimeSquaresSum;
 
 		double nom = e2 / (n - 2);
 		double denom = x2 - x*x/n;
@@ -212,15 +252,15 @@ private:
 			return NAN;
 		}
 
-		double x = sum(timeSum);
-		double x2 = sum(timeSquaresSum);
+		double x = totalTimeSum;
+		double x2 = totalTimeSquaresSum;
 		double pAvgX = point - x/n;
 		double denom = x2 - x*x/n;
 
 		return denom != 0 ? (e2 / (n-2)) * (1.0 / n + pAvgX * pAvgX / denom) : NAN;
 	}
 
-	double sum(double *samples) {
+	double computeSum(double *samples) {
 		double s = 0;
 		for (int i = 0; i < WindowCnt; ++i) {
 			s += samples[i];
@@ -228,7 +268,7 @@ private:
 		return s;
 	}
 
-	int sum(int *samples) {
+	int computeSum(int *samples) {
 		int s = 0;
 		for (int i = 0; i < WindowCnt; ++i) {
 			s += samples[i];
@@ -241,11 +281,11 @@ private:
 			return NAN;
 		}
 
-		double x = sum(timeSum);
-		double x2 = sum(timeSquaresSum);
-		double y = sum(sampleSum);
-		double y2 = sum(sampleSquaresSum);
-		double xy = sum(sampleTimeSum);
+		double x = totalTimeSum;
+		double x2 = totalTimeSquaresSum;
+		double y = totalSampleSum;
+		double y2 = totalSampleSquaresSum;
+		double xy = totalSampleTimeSum;
 
 		return y2 + n*a*a + b*b*x2 - 2*a*y - 2*b*xy + 2*a*b*x;
 	}
