@@ -49,18 +49,17 @@ The project contains a demo application that shows how this project can be used.
 In this section there is step by step tutorial on how to use this project.
 The easiest way to use this project is through Eclipse IDE with installed CDT and PyDev.
 
-1. Generate TTable.h and TTable.cpp
-  * invoke gen_ttable.py (using Python 2.7)
-2. Include the following files into your project
-  * #include "TimeSeries.h"
-  * #include "StudentsDistribution.h"
-  * #include "TTable.h"
+1. If you want to use other confidence levels than (alpha = 0.005, 0.00625, 0.001, 0.0125, 0.025, 0.05), generate TTable.h and TTable.cpp
+  * invoke gen_ttable.py located in scripts folder (using Python 2.7) with the confidence levels as arguments
+2. Include the files located in src directory to your project
 3. Declare an instance of TimeSeries for each time series window you want to test
   * TimeSeries<10, 1000> ts;
     * Where the first parameter is the number of time windows and the second parameter is a window duration
     * The instance above keeps time series with a history of 10 seconds (10 * 1000 ms)
+    * The instance of TimeSeries easily takes a couple of kilobytes of memory and may cause stack overflow. It is better to allocate it statically on heap rather (i.e. make it static or declare it outside a method).
 4. Whenever you get a value from sensor, add it to the respective timeseries along with a timestamp (in ms)
-  * ts.addSample(samlpe, time);
+  * ts.addSample(sample, time);
 5. Test the predicted real value of the time series assuming a linear trend
   * StudentsDistribution lra = ts.getLra();
   * bool answer = lra.isLessThan(tresholdToTest, ALPHA_0_05); // Second parameter is confidence level from TTable.h
+  * or use operators: bool anser = lra < thresholdToTest
