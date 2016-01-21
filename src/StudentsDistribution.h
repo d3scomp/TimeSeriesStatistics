@@ -31,14 +31,16 @@
 
 class StudentsDistribution {
 public:
-	/*
-	 * df - degrees of freedom
-	 */
 	StudentsDistribution(int df, double mean, double variance);
-	bool isLessThan(double threshold, ALPHAS a);
+
 	bool isLessThanOrEqual(double threshold, ALPHAS a);
-	bool isGreaterThan(double threshold, ALPHAS a);
 	bool isGreaterThanOrEqual(double threshold, ALPHAS a);
+
+	inline bool isLessThan(double threshold, ALPHAS a) { return !isGreaterThanOrEqual(threshold, a); }
+	inline bool isGreaterThan(double threshold, ALPHAS a) { return !isLessThanOrEqual(threshold, a); }
+
+	inline double getMean() { return mean; }
+	inline double getVariance() { return variance; }
 
 private:
 	int df; // degrees of freedom

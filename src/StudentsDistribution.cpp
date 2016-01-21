@@ -35,18 +35,6 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 
 	}
 
-	bool StudentsDistribution::isLessThan(double threshold, ALPHAS a) {
-		if (df < 1) {
-			// reject hypothesis if there is not enough samples
-			return false;
-		}
-
-		double dist = (mean - threshold) / sqrt(variance);
-		double icdfValue = getICDF(a);
-
-		return icdfValue > dist;
-	}
-
 	bool StudentsDistribution::isLessThanOrEqual(double threshold, ALPHAS a) {
 		if (df < 1) {
 			// accept hypothesis if there is not enough samples
@@ -57,18 +45,6 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 		double icdfValue = -getICDF(a);
 
 		return icdfValue >= dist;
-	}
-
-	bool StudentsDistribution::isGreaterThan(double threshold, ALPHAS a) {
-		if (df < 1) {
-			// reject hypothesis if there is not enough samples
-			return false;
-		}
-
-		double dist = (mean - threshold) / sqrt(variance);
-		double icdfValue = -getICDF(a);
-
-		return icdfValue < dist;
 	}
 
 	bool StudentsDistribution::isGreaterThanOrEqual(double threshold, ALPHAS a) {

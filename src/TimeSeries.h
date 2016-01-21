@@ -143,7 +143,7 @@ private:
 		double x2 = sum(sampleSquaresSum);
 		double x = sum(sampleSum);
 
-		return (x2 - x*x/n) / (n - 1);
+		return (x2 - x*x/n) / ((n - 1) * n);
 	}
 
 	double computeLraMean(int n) {
@@ -212,8 +212,8 @@ private:
 			return NAN;
 		}
 
-		double x = sum(sampleSum);
-		double x2 = sum(sampleSquaresSum);
+		double x = sum(timeSum);
+		double x2 = sum(timeSquaresSum);
 		double pAvgX = point - x/n;
 		double denom = x2 - x*x/n;
 
