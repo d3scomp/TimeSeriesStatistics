@@ -35,7 +35,7 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 		resetDefaultAlpha();
 	}
 
-	bool StudentsDistribution::isLessThanOrEqual(double threshold) {
+	bool StudentsDistribution::operator<=(double threshold) {
 		if (df < 1) {
 			// accept hypothesis if there is not enough samples
 			return true;
@@ -47,7 +47,7 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 		return icdfValue >= dist;
 	}
 
-	bool StudentsDistribution::isLessThanOrEqual(StudentsDistribution other) {
+	bool StudentsDistribution::operator<=(StudentsDistribution other) {
 		double combinedMean = this->mean - other.mean;
 		double combinedVariance = this->variance + other.variance;
 
@@ -64,7 +64,7 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 		return icdfValue >= combinedMean / sqrt(combinedVariance);
 	}
 
-	bool StudentsDistribution::isGreaterThanOrEqual(double threshold) {
+	bool StudentsDistribution::operator>=(double threshold) {
 		if (df < 1) {
 			// accept hypothesis if there is not enough samples
 			return true;
@@ -76,7 +76,7 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 		return icdfValue <= dist;
 	}
 
-	bool StudentsDistribution::isGreaterThanOrEqual(StudentsDistribution other) {
+	bool StudentsDistribution::operator>=(StudentsDistribution other) {
 		double combinedMean = this->mean - other.mean;
 		double combinedVariance = this->variance + other.variance;
 

@@ -33,15 +33,15 @@ class StudentsDistribution {
 public:
 	StudentsDistribution(int df, double mean, double variance);
 
-	bool isLessThanOrEqual(double threshold);
-	bool isLessThanOrEqual(StudentsDistribution other);
-	bool isGreaterThanOrEqual(double threshold);
-	bool isGreaterThanOrEqual(StudentsDistribution other);
+	bool operator<=(double threshold);
+	bool operator<=(StudentsDistribution other);
+	bool operator>=(double threshold);
+	bool operator>=(StudentsDistribution other);
 
-	inline bool isLessThan(double threshold) { return !isGreaterThanOrEqual(threshold); }
-	inline bool isLessThan(StudentsDistribution other) { return !isGreaterThanOrEqual(other); }
-	inline bool isGreaterThan(double threshold) { return !isLessThanOrEqual(threshold); }
-	inline bool isGreaterThan(StudentsDistribution other) { return !isLessThanOrEqual(other); }
+	inline bool operator<(double threshold) { return !(*this >= threshold); }
+	inline bool operator<(StudentsDistribution other) { return !(*this >= other); }
+	inline bool operator>(double threshold) { return !(*this <= threshold); }
+	inline bool operator>(StudentsDistribution other) { return !(*this <= other); }
 
 	inline double getMean() { return mean; }
 	inline double getVariance() { return variance; }

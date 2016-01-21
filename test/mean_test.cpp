@@ -40,11 +40,14 @@ int main() {
 
 	m.setAlpha(ALPHA_0_05);
 	cout << "alpha = " << m.getAlpha() << endl;
-
-	cout << "m <= 1.94  ... " << m.isLessThanOrEqual(1.94) << "  (should be false)" << endl;
-	cout << "m <= 1.96  ... " << m.isLessThanOrEqual(1.96) << "  (should be true)" << endl;
-	cout << "m >= 2.06  ... " << m.isGreaterThanOrEqual(2.06) << "  (should be false)" << endl;
-	cout << "m >= 2.04  ... " << m.isGreaterThanOrEqual(2.04) << "  (should be true)" << endl;
+	cout << endl;
+	cout << "m <= 1.94  ... " << (m <= 1.94) << "  (should be false)" << endl;
+	cout << "m <= 1.96  ... " << (m <= 1.96) << "  (should be true)" << endl;
+	cout << "m >= 2.06  ... " << (m >= 2.06) << "  (should be false)" << endl;
+	cout << "m >= 2.04  ... " << (m >= 2.04) << "  (should be true)" << endl;
+	cout << endl;
+	cout << "m < 1.96  ... " << (m < 1.96) << "  " << endl;
+	cout << "m > 2.06  ... " << (m > 2.06) << "  " << endl;
 
 	return 0;
 }
