@@ -63,3 +63,12 @@ The easiest way to use this project is through Eclipse IDE with installed CDT an
   * StudentsDistribution lra = ts.getLra();
   * bool answer = lra.isLessThan(tresholdToTest, ALPHA_0_05); // Second parameter is confidence level from TTable.h
   * or use operators: bool anser = lra < thresholdToTest
+
+## Benchmark
+The project comes with source code for a benchmark on STM32F4 DISCOVERY board. The benchmark reports some diagnostics over UART2 on the board. It also indicates its progress (including single evaluations of the statistical test) via pins PD12 - PD15. This allows precise measuremets of duration of individual invocation by means of a digital logic analyzer connected to the respective pins.
+
+The meaning of the pins is as follows:
+* PD13 - is HIGH during the whole benchmark, when the pins have their meaning as given below
+* PD12 - LOW->HIGH = start of a single computation of the statistical test, HIGH->LOW = end of the computation
+* PD14, PD15 - signal the phase of the benchmark - 00 ... mean testing, 01 ... lra testing, 10 ... lrb testing, 11 ... lr(x) testing
+
