@@ -56,8 +56,8 @@ private:
 	double variance;
 	ALPHAS a;
 
-	inline double getICDF(int dfValue);
-	double getICDF() { return getICDF(df); }
+	double getICDF(int dfValue);
+	inline double getICDF() { return getICDF(df); }
 
 	static const int DEFAULT_APLHA_INDEX = 0;
 };
