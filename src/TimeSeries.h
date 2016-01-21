@@ -32,10 +32,10 @@
 #include <math.h>
 
 /*
- * WindowSize - The number of subWindows keep the history of
- * SubWindowSize - The time period to accumulate the samples within together. (in milliseconds)
+ * WindowCnt - The number of windows to keep the history of
+ * WindowSize - The time period to accumulate the samples within together. (in milliseconds)
  */
-template<int WindowCnt, int SubWindowSize>
+template<int WindowCnt, int WindowSize>
 class TimeSeries {
 public:
 	TimeSeries() {
@@ -49,9 +49,9 @@ public:
 	}
 
 	void addSample(double sample, int sampleTime) { // time in ms
-		while ((time + SubWindowSize) < sampleTime) { // While here to skip potential unfilled subWindows
+		while ((time + WindowSize) < sampleTime) { // While here to skip potential unfilled subWindows
 			// If the sample_time belongs to the next time SubWindow
-			time += SubWindowSize; // Move to next time window and initialize it
+			time += WindowSize; // Move to next time window and initialize it
 			index = nextIndex();
 			sampleCounts[index] = 0;
 			sampleSum[index] = 0;
