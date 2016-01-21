@@ -4,7 +4,7 @@ Process data from runs on STM32F4 DISCOVERY into time duration samples.
 
 import csv
 
-samplesExt = '-10-1'
+samplesExt = '-60-3'
 
 computationON = 0b10000000
 batchON = 0b01000000
