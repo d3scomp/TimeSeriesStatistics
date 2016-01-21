@@ -46,8 +46,10 @@ int main() {
 	cout << "m >= 2.06  ... " << (m >= 2.06) << "  (should be false)" << endl;
 	cout << "m >= 2.04  ... " << (m >= 2.04) << "  (should be true)" << endl;
 	cout << endl;
-	cout << "m < 1.96  ... " << (m < 1.96) << "  " << endl;
-	cout << "m > 2.06  ... " << (m > 2.06) << "  " << endl;
+	cout << "m > 1.94  ... " << (m > 2.06) << "  " << endl;
+	cout << "m > 1.96  ... " << (m > 2.06) << "  " << endl;
+	cout << "m < 2.06  ... " << (m < 1.96) << "  " << endl;
+	cout << "m < 2.04  ... " << (m < 1.96) << "  " << endl;
 
 	return 0;
 }
