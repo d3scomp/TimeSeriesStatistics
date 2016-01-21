@@ -70,7 +70,7 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 		   between to closest higer and lower degree of freedom.
 		*/
 
-		const double *icdfA = icdf[a];
+		const double *icdfA = ttable_icdf[a];
 		int base = 0;
 		int major_idx = -1;
 		int base_incr = 0;
@@ -78,19 +78,19 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 		while (base + base_incr < df) {
 			base += base_incr;
 			major_idx += 1;
-			minor_step = (1 << major_idx * boost);
-			base_incr = minor_step * minor_count;
+			minor_step = (1 << major_idx * ttable_boost);
+			base_incr = minor_step * ttable_minor_count;
 		}
 		df -= base;
 		if (df % minor_step == 0) {
 			int minor_idx = df / minor_step - 1;
-			int idx = major_idx * minor_count + minor_idx;
+			int idx = major_idx * ttable_minor_count + minor_idx;
 			return icdfA[idx];
 		} else {
 			int minor_idx = df / minor_step;
 			int df_high = base + (minor_idx + 1) * minor_step;
 			int df_low = df_high - minor_step;
-			int idx_high = major_idx * minor_count + minor_idx;
+			int idx_high = major_idx * ttable_minor_count + minor_idx;
 			int idx_low = idx_high - 1;
 			double delta = double(df) / (df_high - df_low);
 			return icdfA[idx_high] * delta + icdfA[idx_low] * (1 - delta);

@@ -71,7 +71,7 @@ def getICDFTable(alpha):
 		
 	return icdf.reshape((-1))
 
-
+print 'Generation started ...'
 	
 alphas = [float(alphaStr) for alphaStr in sys.argv[1:]]
 if len(alphas) == 0:
@@ -88,11 +88,11 @@ out.write('''/*
 
 #include "TTable.h"
 
-const int minor_count = {0};
-const int boost = {1};
-const int df_max = {2};
+const int ttable_minor_count = {0};
+const int ttable_boost = {1};
+const int ttable_df_max = {2};
 
-const double icdf[{3}][{4}] = {{
+const double ttable_icdf[{3}][{4}] = {{
 {5}
 }};
 '''.format(
@@ -117,11 +117,11 @@ out.write('''/*
 
 enum ALPHAS {{{0}}};
 
-extern const int minor_count;
-extern const int boost;
-extern const int df_max;
+extern const int ttable_minor_count;
+extern const int ttable_boost;
+extern const int ttable_df_max;
 
-extern const double icdf[{1}][{2}];
+extern const double ttable_icdf[{1}][{2}];
 
 #endif /* TTABLE_H_ */
 '''.format(
@@ -129,3 +129,5 @@ extern const double icdf[{1}][{2}];
 	len(alphas), idfTableSize
 ))
 out.close()
+
+print 'done.'
