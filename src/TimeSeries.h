@@ -41,6 +41,14 @@ public:
 	TimeSeries() {
 		time = 0;
 		index = 0;
+
+		totalSampleCounts = 0;
+		totalTimeSquaresSum = 0;
+		totalTimeSum = 0;
+		totalSampleSum = 0;
+		totalSampleTimeSum = 0;
+		totalSampleSquaresSum = 0;
+
 		for (int i = 0; i < WindowCnt; ++i) {
 			sampleCounts[i] = 0;
 			sampleSum[i] = 0;
