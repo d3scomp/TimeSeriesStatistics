@@ -38,10 +38,13 @@ int main() {
 	cout << "Real mean: 2  Real variance: 0.0009" << endl;
 	cout << "Computed mean: " << m.getMean() << " Computed variance: " << m.getVariance() << endl;
 
-	cout << "m <= 1.94  ... " << m.isLessThanOrEqual(1.94, ALPHA_0_05) << "  (should be false)" << endl;
-	cout << "m <= 1.96  ... " << m.isLessThanOrEqual(1.96, ALPHA_0_05) << "  (should be true)" << endl;
-	cout << "m >= 2.06  ... " << m.isGreaterThanOrEqual(2.06, ALPHA_0_05) << "  (should be false)" << endl;
-	cout << "m >= 2.04  ... " << m.isGreaterThanOrEqual(2.04, ALPHA_0_05) << "  (should be true)" << endl;
+	m.setAlpha(ALPHA_0_05);
+	cout << "alpha = " << m.getAlpha() << endl;
+
+	cout << "m <= 1.94  ... " << m.isLessThanOrEqual(1.94) << "  (should be false)" << endl;
+	cout << "m <= 1.96  ... " << m.isLessThanOrEqual(1.96) << "  (should be true)" << endl;
+	cout << "m >= 2.06  ... " << m.isGreaterThanOrEqual(2.06) << "  (should be false)" << endl;
+	cout << "m >= 2.04  ... " << m.isGreaterThanOrEqual(2.04) << "  (should be true)" << endl;
 
 	return 0;
 }

@@ -33,25 +33,33 @@ class StudentsDistribution {
 public:
 	StudentsDistribution(int df, double mean, double variance);
 
-	bool isLessThanOrEqual(double threshold, ALPHAS a);
-	bool isLessThanOrEqual(StudentsDistribution other, ALPHAS a);
-	bool isGreaterThanOrEqual(double threshold, ALPHAS a);
-	bool isGreaterThanOrEqual(StudentsDistribution other, ALPHAS a);
+	bool isLessThanOrEqual(double threshold);
+	bool isLessThanOrEqual(StudentsDistribution other);
+	bool isGreaterThanOrEqual(double threshold);
+	bool isGreaterThanOrEqual(StudentsDistribution other);
 
-	inline bool isLessThan(double threshold, ALPHAS a) { return !isGreaterThanOrEqual(threshold, a); }
-	inline bool isLessThan(StudentsDistribution other, ALPHAS a) { return !isGreaterThanOrEqual(other, a); }
-	inline bool isGreaterThan(double threshold, ALPHAS a) { return !isLessThanOrEqual(threshold, a); }
-	inline bool isGreaterThan(StudentsDistribution other, ALPHAS a) { return !isLessThanOrEqual(other, a); }
+	inline bool isLessThan(double threshold) { return !isGreaterThanOrEqual(threshold); }
+	inline bool isLessThan(StudentsDistribution other) { return !isGreaterThanOrEqual(other); }
+	inline bool isGreaterThan(double threshold) { return !isLessThanOrEqual(threshold); }
+	inline bool isGreaterThan(StudentsDistribution other) { return !isLessThanOrEqual(other); }
 
 	inline double getMean() { return mean; }
 	inline double getVariance() { return variance; }
+
+	void setAlpha(ALPHAS a) { this->a = a; }
+	void resetDefaultAlpha() { a = static_cast<ALPHAS>(DEFAULT_APLHA_INDEX); }
+	ALPHAS getAlpha() { return a; }
 
 private:
 	int df; // degrees of freedom
 	double mean;
 	double variance;
-	inline double getICDF(ALPHAS a, int dfValue);
-	double getICDF(ALPHAS a) { return getICDF(a, df); }
+	ALPHAS a;
+
+	inline double getICDF(int dfValue);
+	double getICDF() { return getICDF(df); }
+
+	static const int DEFAULT_APLHA_INDEX = 0;
 };
 
 #endif /* STUDENTSDISTRIBUTION_H_ */
