@@ -60,6 +60,16 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 	}
 
 	double StudentsDistribution::getICDF(ALPHAS a) {
+		/* Though declared as one-dimensional, icdfA (a table with critical values for a particular alpha) is essentially a two dimensional table. 
+		   The rows are indexed by major_idx, the columns are indexed by minor_idx. 
+		   The first row corresponds to critical values for degrees of freedom 1, 2, 3, ..., minor_count
+		   The second row starts where the previous row left off and goes by minor_step, i.e.  minor_count + minor_step, minor_count + minor_step * 2, ..., minor_count + minor_step * minor_count
+		   The same pattern repets for all subsequent rows. The minor_step is computed as 2^(major_idx * boost), which means that the minor_step grows dramatically with every row.
+		   As the result the algorithm below needs only a couple of iterations to get to degrees of freedom in order of milions. With current settings, it needs 6 iterations to reach df=1e9
+		   Once it finds the critical value, it returns it. If the particular degree of freedom is not present, it interpolates the critical value
+		   between to closest higer and lower degree of freedom.
+		*/
+
 		const double *icdfA = icdf[a];
 		int base = 0;
 		int major_idx = -1;

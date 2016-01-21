@@ -13,7 +13,7 @@ import sys
 len = int(sys.argv[2])
 beta = float(sys.argv[3])
 
-x = np.sort(np.random.uniform(0, 10000, len))
+x = np.sort(np.random.uniform(0, 60000, len))
 y = np.random.normal(2, 3, len) + x*beta
 
 out = open(sys.argv[1], "w")

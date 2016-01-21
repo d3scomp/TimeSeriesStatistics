@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 """
@@ -21,7 +22,7 @@ Generates files with tabulated quantiles Student's t-distribution for alphas giv
 
 Usage: gen_ttable <alpha 1> ... <alpha n>
 
-If no alphas are given on the command line, it generates the table for 0.025 and 0.05
+If no alphas are given on the command line, it generates the table for: 0.005, 0.00625, 0.001, 0.0125, 0.025, 0.05
 
 Example: gen_ttable 0.0125 0.025 0.05
 
@@ -49,7 +50,7 @@ def getLimits(dfMax):
 	return (base, (majorIdx + 1) * minorCount)
 
 
-dfMax, idfTableSize = getLimits(100000)
+dfMax, idfTableSize = getLimits(1e9)
 
 
 def getICDFTable(alpha):
@@ -74,7 +75,7 @@ def getICDFTable(alpha):
 	
 alphas = [float(alphaStr) for alphaStr in sys.argv[1:]]
 if len(alphas) == 0:
-	alphas = [0.025, 0.05]
+	alphas = [0.005, 0.00625, 0.001, 0.0125, 0.025, 0.05]
 
 
 out = open('../src/TTable.cpp', 'w')
