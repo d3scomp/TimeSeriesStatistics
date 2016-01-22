@@ -33,15 +33,25 @@ class StudentsDistribution {
 public:
 	StudentsDistribution(int df, double mean, double variance);
 
-	bool operator<=(double threshold);
-	bool operator<=(StudentsDistribution other);
-	bool operator>=(double threshold);
-	bool operator>=(StudentsDistribution other);
+	bool isLessOrEqualTo(double threshold, ALPHAS confidence);
+	bool isLessOrEqualTo(StudentsDistribution other, ALPHAS confidence);
+	bool isGreaterOrEqualTo(double threshold, ALPHAS confidence);
+	bool isGreaterOrEqualTo(StudentsDistribution other, ALPHAS confidence);
 
-	inline bool operator<(double threshold) { return !(*this >= threshold); }
-	inline bool operator<(StudentsDistribution other) { return !(*this >= other); }
-	inline bool operator>(double threshold) { return !(*this <= threshold); }
-	inline bool operator>(StudentsDistribution other) { return !(*this <= other); }
+	inline bool isLessThan(double threshold, ALPHAS confidence) { return !isGreaterOrEqualTo(threshold, confidence); }
+	inline bool isLessThan(StudentsDistribution other, ALPHAS confidence) { return !isGreaterOrEqualTo(other, confidence); }
+	inline bool isGreaterThan(double threshold, ALPHAS confidence) { return !isLessOrEqualTo(threshold, confidence); }
+	inline bool isGreaterThan(StudentsDistribution other, ALPHAS confidence) { return !isLessOrEqualTo(other, confidence); }
+
+	inline bool operator<=(double threshold) { return isLessOrEqualTo(threshold, a); }
+	inline bool operator<=(StudentsDistribution other) { return isLessOrEqualTo(other, a); }
+	inline bool operator>=(double threshold) { return isGreaterOrEqualTo(threshold, a); }
+	inline bool operator>=(StudentsDistribution other) { return isGreaterOrEqualTo(other, a); }
+
+	inline bool operator<(double threshold) { return isLessThan(threshold, a); }
+	inline bool operator<(StudentsDistribution other) { return isLessThan(other, a); }
+	inline bool operator>(double threshold) { return isGreaterThan(threshold, a); }
+	inline bool operator>(StudentsDistribution other) { return isGreaterThan(other, a); }
 
 	inline double getMean() { return mean; }
 	inline double getVariance() { return variance; }
@@ -57,8 +67,8 @@ private:
 	double variance;
 	ALPHAS a;
 
-	double getICDF(int dfValue);
-	inline double getICDF() { return getICDF(df); }
+	double getICDF(ALPHAS confidence, int dfValue);
+	inline double getICDF(ALPHAS confidence) { return getICDF(confidence, df); }
 
 	static int DEFAULT_ALPHA_INDEX;
 };

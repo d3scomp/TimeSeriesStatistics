@@ -37,19 +37,19 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 		resetToDefaultAlpha();
 	}
 
-	bool StudentsDistribution::operator<=(double threshold) {
+	bool StudentsDistribution::isLessOrEqualTo(double threshold, ALPHAS confidence) {
 		if (df < 1) {
 			// accept hypothesis if there is not enough samples
 			return true;
 		}
 
 		double dist = (mean - threshold) / sqrt(variance);
-		double icdfValue = -getICDF();
+		double icdfValue = -getICDF(confidence);
 
 		return icdfValue >= dist;
 	}
 
-	bool StudentsDistribution::operator<=(StudentsDistribution other) {
+	bool StudentsDistribution::isLessOrEqualTo(StudentsDistribution other, ALPHAS confidence) {
 		double combinedMean = this->mean - other.mean;
 		double combinedVariance = this->variance + other.variance;
 
@@ -61,24 +61,24 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 			return true;
 		}
 
-		double icdfValue = -getICDF(combinedDf);
+		double icdfValue = -getICDF(confidence, combinedDf);
 
 		return icdfValue >= combinedMean / sqrt(combinedVariance);
 	}
 
-	bool StudentsDistribution::operator>=(double threshold) {
+	bool StudentsDistribution::isGreaterOrEqualTo(double threshold, ALPHAS confidence) {
 		if (df < 1) {
 			// accept hypothesis if there is not enough samples
 			return true;
 		}
 
 		double dist = (mean - threshold) / sqrt(variance);
-		double icdfValue = getICDF();
+		double icdfValue = getICDF(confidence);
 	
 		return icdfValue <= dist;
 	}
 
-	bool StudentsDistribution::operator>=(StudentsDistribution other) {
+	bool StudentsDistribution::isGreaterOrEqualTo(StudentsDistribution other, ALPHAS confidence) {
 		double combinedMean = this->mean - other.mean;
 		double combinedVariance = this->variance + other.variance;
 
@@ -90,12 +90,12 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 			return true;
 		}
 
-		double icdfValue = getICDF(combinedDf);
+		double icdfValue = getICDF(confidence, combinedDf);
 
 		return icdfValue <= combinedMean / sqrt(combinedVariance);
 	}
 
-	double StudentsDistribution::getICDF(int dfValue) {
+	double StudentsDistribution::getICDF(ALPHAS confidence, int dfValue) {
 		/* Though declared as one-dimensional, icdfA (a table with critical values for a particular alpha) is essentially a two dimensional table. 
 		   The rows are indexed by major_idx, the columns are indexed by minor_idx. 
 		   The first row corresponds to critical values for degrees of freedom 1, 2, 3, ..., minor_count
@@ -106,7 +106,7 @@ StudentsDistribution::StudentsDistribution(int df, double mean, double variance)
 		   between to closest higer and lower degree of freedom.
 		*/
 
-		const double *icdfA = ttable::icdf[a];
+		const double *icdfA = ttable::icdf[confidence];
 		int base = 0;
 		int major_idx = -1;
 		int base_incr = 0;
