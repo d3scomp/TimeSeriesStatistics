@@ -94,10 +94,10 @@ int main(void)
 	printf("Real mean: 2  Real variance: 0.0009\r\n");
 	printf("Computed mean: %f  Computed variance: %f\r\n", m.getMean(), m.getVariance());
 
-	printf("m <= 1.9  ... %d  (should be false)\r\n", m.isLessThanOrEqual(1.9, ALPHA_0_05));
-	printf("m <= 1.98  ... %d  (should be true)\r\n", m.isLessThanOrEqual(1.98, ALPHA_0_05));
-	printf("m >= 2.1  ... %d  (should be false)\r\n", m.isGreaterThanOrEqual(2.1, ALPHA_0_05));
-	printf("m >= 2.02  ... %d  (should be true)\r\n", m.isGreaterThanOrEqual(2.02, ALPHA_0_05));
+	printf("m <= 1.9  ... %d  (should be false)\r\n", m <= 1.9);
+	printf("m <= 1.98  ... %d  (should be true)\r\n", m <= 1.98);
+	printf("m >= 2.1  ... %d  (should be false)\r\n", m >= 2.1);
+	printf("m >= 2.02  ... %d  (should be true)\r\n", m >= 2.02);
 
 	
 	StudentsDistribution a = Alr.getLra();
@@ -129,7 +129,7 @@ int main(void)
 		GPIOD->BSRRL = GPIO_Pin_12;
 
 		StudentsDistribution m = Am.getMean();
-		res = m.isLessThanOrEqual(1.94, ALPHA_0_05);
+		res = m <= 1.94;
 		
 		GPIOD->BSRRH = GPIO_Pin_12;
 		dummy += res;
@@ -142,7 +142,7 @@ int main(void)
 		GPIOD->BSRRL = GPIO_Pin_12;
 
 		StudentsDistribution a = Alr.getLra();
-		res = a.isLessThanOrEqual(1.94, ALPHA_0_05);
+		res = a <= 1.94;
 		
 		GPIOD->BSRRH = GPIO_Pin_12;
 		dummy += res;
@@ -155,7 +155,7 @@ int main(void)
 		GPIOD->BSRRL = GPIO_Pin_12;
 
 		StudentsDistribution b = Alr.getLrb();
-		res = b.isLessThanOrEqual(1.94, ALPHA_0_05);
+		res = b <= 1.94;
 		
 		GPIOD->BSRRH = GPIO_Pin_12;
 		dummy += res;
@@ -168,7 +168,7 @@ int main(void)
 		GPIOD->BSRRL = GPIO_Pin_12;
 
 		StudentsDistribution x = Alr.getLr(10000);
-		res = x.isLessThanOrEqual(1.94, ALPHA_0_05);
+		res = x <= 1.94;
 		
 		GPIOD->BSRRH = GPIO_Pin_12;
 		dummy += res;

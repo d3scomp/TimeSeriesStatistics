@@ -22,7 +22,7 @@ Generates files with tabulated quantiles Student's t-distribution for alphas giv
 
 Usage: gen_ttable <alpha 1> ... <alpha n>
 
-If no alphas are given on the command line, it generates the table for: 0.005, 0.00625, 0.001, 0.0125, 0.025, 0.05
+If no alphas are given on the command line, it generates the table for: 0.05, 0.005, 0.00625, 0.001, 0.0125, 0.025
 
 Example: gen_ttable 0.0125 0.025 0.05
 
@@ -75,7 +75,7 @@ print 'Generation started ...'
 	
 alphas = [float(alphaStr) for alphaStr in sys.argv[1:]]
 if len(alphas) == 0:
-	alphas = [0.005, 0.00625, 0.001, 0.0125, 0.025, 0.05]
+	alphas = [0.05, 0.005, 0.00625, 0.001, 0.0125, 0.025]
 
 
 out = open('../src/TTable.cpp', 'w')
